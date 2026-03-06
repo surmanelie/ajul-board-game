@@ -1,7 +1,4 @@
-//package ch.epfl.ajul.gamestate.packed;
-//
-//public class MyPkFloorTest {
-//}
+
 
 package ch.epfl.ajul.gamestate.packed;
 
@@ -132,5 +129,43 @@ public final class MyPkFloorTest {
         f = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.Colored.B));               // + B
         // L'ajout se fait "à la suite" : [D, D, B] (et pas trié globalement)
         assertEquals("[D, D, B]", PkFloor.toString(f));
+    }
+
+    @Test
+    void markerReplacesLastEvenIfFloorBecomesFullDuringTheSameCall() {
+        // floor = 6 A
+        int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(6, TileKind.Colored.A));
+        assertEquals(6, PkFloor.size(f));
+        assertFalse(PkFloor.containsFirstPlayerMarker(f));
+
+        // On ajoute 2 B + 1 marker dans le même appel.
+        // Ordre d'ajout interne : B puis marker.
+        int s = PkTileSet.union(
+                PkTileSet.of(2, TileKind.Colored.B),
+                PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER)
+        );
+        int f2 = PkFloor.withAddedTiles(f, s);
+
+        assertEquals(7, PkFloor.size(f2));
+        assertTrue(PkFloor.containsFirstPlayerMarker(f2));
+        assertEquals(TileKind.FIRST_PLAYER_MARKER, PkFloor.tileAt(f2, 6));
+
+        // Les 6 premières restent A (le B ajouté a été remplacé)
+        for (int i = 0; i < 6; i++) {
+            assertEquals(TileKind.Colored.A, PkFloor.tileAt(f2, i));
+        }
+    }
+
+    @Test
+    void addingMarkerWhenAlreadyPresentDoesNotChangeEvenIfFloorIsFull() {
+        // Remplit avec 7 A puis force le marker à remplacer la dernière
+        int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(7, TileKind.Colored.A));
+        int f2 = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
+        assertEquals(7, PkFloor.size(f2));
+        assertTrue(PkFloor.containsFirstPlayerMarker(f2));
+
+        // Ajoute encore un marker : doit être strictement sans effet
+        int f3 = PkFloor.withAddedTiles(f2, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
+        assertEquals(f2, f3);
     }
 }
