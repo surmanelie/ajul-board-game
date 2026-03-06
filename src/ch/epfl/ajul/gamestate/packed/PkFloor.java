@@ -54,7 +54,6 @@ public final class PkFloor {
      * Ligne plancher vide.
      */
     public static final int EMPTY = 0;
-    // <test>
 
     /**
      * Retourne la taille de la ligne plancher empaquetée {@code pkFloor}.
