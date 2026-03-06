@@ -1,7 +1,3 @@
-//package ch.epfl.ajul.gamestate.packed;
-//
-//public class PkPatterns {
-//}
 
 package ch.epfl.ajul.gamestate.packed;
 

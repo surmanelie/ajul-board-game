@@ -1,7 +1,3 @@
-//package ch.epfl.ajul.gamestate.packed;
-//
-//public class PkFloor {
-//}
 
 package ch.epfl.ajul.gamestate.packed;
 

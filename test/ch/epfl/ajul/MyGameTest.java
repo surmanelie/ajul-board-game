@@ -145,4 +145,34 @@ public final class MyGameTest {
         assertThrows(UnsupportedOperationException.class,
                 () -> g.playerDescriptions().add(pd(0, "Z", PlayerKind.HUMAN)));
     }
+
+    @Test
+    void playerDescriptionRejectsNullId() {
+        assertThrows(NullPointerException.class,
+                () -> new Game.PlayerDescription(null, "A", PlayerKind.HUMAN));
+    }
+
+    @Test
+    void playerDescriptionRejectsNullName() {
+        assertThrows(NullPointerException.class,
+                () -> new Game.PlayerDescription(PlayerId.ALL.get(0), null, PlayerKind.HUMAN));
+    }
+
+    @Test
+    void playerDescriptionRejectsNullKind() {
+        assertThrows(NullPointerException.class,
+                () -> new Game.PlayerDescription(PlayerId.ALL.get(0), "A", null));
+    }
+
+    @Test
+    void returnedListsAreUnmodifiable() {
+        Game g = new Game(List.of(
+                pd(0, "A", PlayerKind.HUMAN),
+                pd(1, "B", PlayerKind.AI)
+        ));
+
+        assertThrows(UnsupportedOperationException.class, () -> g.playerIds().add(PlayerId.ALL.get(0)));
+        assertThrows(UnsupportedOperationException.class, () -> g.factories().add(TileSource.Factory.FACTORY_1));
+        assertThrows(UnsupportedOperationException.class, () -> g.tileSources().add(TileSource.CENTER_AREA));
+    }
 }
