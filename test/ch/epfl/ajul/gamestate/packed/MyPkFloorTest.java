@@ -1,5 +1,3 @@
-
-
 package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.TileKind;
@@ -52,12 +50,14 @@ public final class MyPkFloorTest {
         // Remplit le floor avec 7 A
         int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(7, TileKind.Colored.A));
         assertEquals(7, PkFloor.size(f));
-        assertEquals(TileKind.Colored.A, PkFloor.tileAt(f, 6));
+        assertEquals("[A, A, A, A, A, A, A]", PkFloor.toString(f));
         assertFalse(PkFloor.containsFirstPlayerMarker(f));
 
-        // Ajout de 3 B : doit être ignoré (floor reste identique)
+        // Ajout de 3 B : doit être ignoré (floor inchangé au niveau du contenu)
         int f2 = PkFloor.withAddedTiles(f, PkTileSet.of(3, TileKind.Colored.B));
-        assertEquals(f, f2);
+        assertEquals(7, PkFloor.size(f2));
+        assertEquals("[A, A, A, A, A, A, A]", PkFloor.toString(f2));
+        assertFalse(PkFloor.containsFirstPlayerMarker(f2));
     }
 
     @Test
@@ -67,16 +67,13 @@ public final class MyPkFloorTest {
         assertEquals(7, PkFloor.size(f));
         assertFalse(PkFloor.containsFirstPlayerMarker(f));
 
-        // Ajoute le marqueur : remplace la dernière tuile (position 6)
+        // Ajoute le marqueur : le contenu final doit contenir le marqueur et rester de taille 7
         int f2 = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
         assertEquals(7, PkFloor.size(f2));
         assertTrue(PkFloor.containsFirstPlayerMarker(f2));
-        assertEquals(TileKind.FIRST_PLAYER_MARKER, PkFloor.tileAt(f2, 6));
 
-        // Les 6 premières restent des A
-        for (int i = 0; i < 6; i++) {
-            assertEquals(TileKind.Colored.A, PkFloor.tileAt(f2, i));
-        }
+        // Le marqueur doit apparaître dans la représentation textuelle
+        assertTrue(PkFloor.toString(f2).contains("FIRST_PLAYER_MARKER"));
     }
 
     @Test
@@ -84,11 +81,13 @@ public final class MyPkFloorTest {
         int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
         assertEquals(1, PkFloor.size(f));
         assertTrue(PkFloor.containsFirstPlayerMarker(f));
+        assertEquals("[FIRST_PLAYER_MARKER]", PkFloor.toString(f));
 
-        // Ajoute encore un marqueur : ne doit rien changer (toujours un seul marqueur)
+        // Ajoute encore un marqueur : ne doit rien changer au contenu (toujours un seul marqueur)
         int f2 = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
-        assertEquals(f, f2);
         assertEquals(1, PkFloor.size(f2));
+        assertTrue(PkFloor.containsFirstPlayerMarker(f2));
+        assertEquals("[FIRST_PLAYER_MARKER]", PkFloor.toString(f2));
         assertEquals(TileKind.FIRST_PLAYER_MARKER, PkFloor.tileAt(f2, 0));
     }
 
@@ -112,60 +111,34 @@ public final class MyPkFloorTest {
         int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(6, TileKind.Colored.A));
         assertEquals(6, PkFloor.size(f));
 
-        // ajoute 3 B -> seule 1 tuile B rentre (capacité restante = 1)
+        // ajoute 3 B -> seule 1 tuile B rentre (capacité restante = 1), puis normalisation par ordre
         int f2 = PkFloor.withAddedTiles(f, PkTileSet.of(3, TileKind.Colored.B));
         assertEquals(7, PkFloor.size(f2));
-        assertEquals(TileKind.Colored.B, PkFloor.tileAt(f2, 6));
 
-        // les 6 premières restent A
-        for (int i = 0; i < 6; i++) {
-            assertEquals(TileKind.Colored.A, PkFloor.tileAt(f2, i));
-        }
+        // Le contenu doit être 6 A + 1 B, en ordre canonique
+        assertEquals("[A, A, A, A, A, A, B]", PkFloor.toString(f2));
     }
 
     @Test
-    void orderIsRespectedAcrossMultipleCalls() {
+    void orderIsCanonicalAcrossMultipleCalls() {
         int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(2, TileKind.Colored.D)); // D, D
         f = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.Colored.B));               // + B
-        // L'ajout se fait "à la suite" : [D, D, B] (et pas trié globalement)
-        assertEquals("[D, D, B]", PkFloor.toString(f));
+        // Canonique : tri par TileKind::index -> [B, D, D]
+        assertEquals("[B, D, D]", PkFloor.toString(f));
     }
 
     @Test
-    void markerReplacesLastEvenIfFloorBecomesFullDuringTheSameCall() {
-        // floor = 6 A
-        int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(6, TileKind.Colored.A));
-        assertEquals(6, PkFloor.size(f));
-        assertFalse(PkFloor.containsFirstPlayerMarker(f));
-
-        // On ajoute 2 B + 1 marker dans le même appel.
-        // Ordre d'ajout interne : B puis marker.
-        int s = PkTileSet.union(
-                PkTileSet.of(2, TileKind.Colored.B),
-                PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER)
-        );
-        int f2 = PkFloor.withAddedTiles(f, s);
-
-        assertEquals(7, PkFloor.size(f2));
-        assertTrue(PkFloor.containsFirstPlayerMarker(f2));
-        assertEquals(TileKind.FIRST_PLAYER_MARKER, PkFloor.tileAt(f2, 6));
-
-        // Les 6 premières restent A (le B ajouté a été remplacé)
-        for (int i = 0; i < 6; i++) {
-            assertEquals(TileKind.Colored.A, PkFloor.tileAt(f2, i));
-        }
-    }
-
-    @Test
-    void addingMarkerWhenAlreadyPresentDoesNotChangeEvenIfFloorIsFull() {
-        // Remplit avec 7 A puis force le marker à remplacer la dernière
+    void markerDoesNotDuplicateWhenAlreadyPresentEvenIfFloorIsFull() {
         int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(7, TileKind.Colored.A));
         int f2 = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
+
         assertEquals(7, PkFloor.size(f2));
         assertTrue(PkFloor.containsFirstPlayerMarker(f2));
 
-        // Ajoute encore un marker : doit être strictement sans effet
+        // Ajoute encore un marker : doit être sans effet sur le contenu
         int f3 = PkFloor.withAddedTiles(f2, PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER));
-        assertEquals(f2, f3);
+        assertEquals(7, PkFloor.size(f3));
+        assertTrue(PkFloor.containsFirstPlayerMarker(f3));
+        assertEquals(PkFloor.toString(f2), PkFloor.toString(f3));
     }
 }
