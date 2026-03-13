@@ -17,13 +17,6 @@ public final class PkIntSet32 {
      */
     public static final int EMPTY = 0;
 
-    /**
-     * Construit un objet {@code PkIntSet32}.
-     * <p>
-     * Cette classe n'étant composée que de méthodes statiques, ce constructeur n'a pas vocation
-     * à être utilisé.
-     */
-    public PkIntSet32() { }
 
     /**
      * Retourne vrai si et seulement si l'ensemble empaqueté contient l'entier {@code i}.
