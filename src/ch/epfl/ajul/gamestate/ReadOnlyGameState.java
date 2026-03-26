@@ -20,26 +20,59 @@ import java.util.List;
 /**
  * Représente un état de partie d'Ajul en lecture seule.
  * <p>
- * L'état est composé de la configuration (Game), du sac, des sources, de l'état des joueurs
- * et du joueur courant. Certaines informations (p.ex. tuiles sorties du jeu) sont calculées
- * à la demande.
+ * L'état est composé de la configuration de la partie, du contenu du sac, du contenu
+ * des sources de tuiles, de l'ensemble des sources uniques, de l'état des joueurs
+ * et de l'identité du joueur courant.
+ *
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public interface ReadOnlyGameState {
 
-
-
+    /**
+     * Retourne la configuration de la partie.
+     *
+     * @return la configuration de la partie
+     */
     Game game();
 
+    /**
+     * Retourne le contenu du sac duquel les tuiles sont extraites pour remplir les fabriques,
+     * sous la forme d'un ensemble de tuiles empaqueté.
+     *
+     * @return le contenu empaqueté du sac
+     */
     int pkTileBag();
 
+    /**
+     * Retourne un tableau décrivant le contenu des sources de tuiles, l'élément à l'index
+     * {@code i} de ce tableau étant l'ensemble de tuiles empaqueté correspondant à la source
+     * d'index {@code i}.
+     *
+     * @return le tableau décrivant le contenu des sources de tuiles
+     */
     ReadOnlyIntArray pkTileSources();
 
+    /**
+     * Retourne l'ensemble empaqueté des index des sources uniques.
+     *
+     * @return l'ensemble empaqueté des sources uniques
+     */
     int pkUniqueTileSources();
 
+    /**
+     * Retourne le tableau contenant les états empaquetés des joueurs.
+     *
+     * @return le tableau contenant les états empaquetés des joueurs
+     */
     ReadOnlyIntArray pkPlayerStates();
 
+    /**
+     * Retourne l'identité du joueur courant.
+     *
+     * @return l'identité du joueur courant
+     */
     PlayerId currentPlayerId();
-
 
 
     /**
