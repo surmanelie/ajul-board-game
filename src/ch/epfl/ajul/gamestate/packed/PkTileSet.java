@@ -22,7 +22,7 @@ import java.util.random.RandomGenerator;
 public final class PkTileSet {
 
     private static final int BITS_PER_COLOR = 6;
-    private static final int COLOR_MASK = (1 << BITS_PER_COLOR) - 1; // 0..63
+    private static final int COLOR_MASK = (1 << BITS_PER_COLOR) - 1;
     private static final int MARKER_BIT_INDEX = 30;
 
     /**
