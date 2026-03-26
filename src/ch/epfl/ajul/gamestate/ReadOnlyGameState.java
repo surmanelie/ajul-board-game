@@ -125,7 +125,7 @@ public interface ReadOnlyGameState {
         return validMovesInto(destination, true);
     }
 
-    // --- Code commun ---
+
 
     private int validMovesInto(short[] destination, boolean uniqueOnly) {
         Preconditions.checkArgument(destination.length >= Move.MAX_MOVES);
@@ -133,7 +133,9 @@ public interface ReadOnlyGameState {
         var sources = pkTileSources();
         var current = currentPlayerId();
         var ps = pkPlayerStates();
+
         int pkPatterns = PkPlayerStates.pkPatterns(ps, current);
+        int pkWall = PkPlayerStates.pkWall(ps, current);
 
         int uniqueSources = pkUniqueTileSources();
 
@@ -149,6 +151,7 @@ public interface ReadOnlyGameState {
 
                 for (var line : TileDestination.Pattern.ALL) {
                     if (PkPatterns.isFull(pkPatterns, line)) continue;
+                    if (PkWall.hasTileAt(pkWall, line, color)) continue;
                     if (!PkPatterns.canContain(pkPatterns, line, color)) continue;
 
                     destination[count++] = PkMove.pack(source, color, line);
