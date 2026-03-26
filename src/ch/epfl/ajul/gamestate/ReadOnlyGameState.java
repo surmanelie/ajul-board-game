@@ -26,7 +26,7 @@ import java.util.List;
  */
 public interface ReadOnlyGameState {
 
-    // --- Méthodes abstraites (stockage) ---
+
 
     Game game();
 
@@ -40,7 +40,7 @@ public interface ReadOnlyGameState {
 
     PlayerId currentPlayerId();
 
-    // --- Méthodes par défaut (calculées) ---
+
 
     /**
      * Retourne une version immuable de cet état.
