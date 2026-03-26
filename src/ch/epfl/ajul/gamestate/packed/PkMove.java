@@ -19,7 +19,6 @@ import ch.epfl.ajul.TileSource;
  */
 public final class PkMove {
 
-    // === Layout (10 bits used)
     private static final int SOURCE_OFFSET = 0;
     private static final int SOURCE_BITS = 4;
     private static final int SOURCE_MASK = (1 << SOURCE_BITS) - 1;

@@ -25,12 +25,12 @@ public final class PkPatterns {
 
     private static final int BITS_PER_COUNT = 3;
     private static final int BITS_PER_COLOR = 3;
-    private static final int BITS_PER_LINE = BITS_PER_COUNT + BITS_PER_COLOR; // 6
+    private static final int BITS_PER_LINE = BITS_PER_COUNT + BITS_PER_COLOR;
 
-    private static final int COUNT_MASK = (1 << BITS_PER_COUNT) - 1; // 0b111
-    private static final int COLOR_MASK = (1 << BITS_PER_COLOR) - 1; // 0b111
+    private static final int COUNT_MASK = (1 << BITS_PER_COUNT) - 1;
+    private static final int COLOR_MASK = (1 << BITS_PER_COLOR) - 1;
 
-    private static final int COLOR_OFFSET_IN_LINE = BITS_PER_COUNT; // 3
+    private static final int COLOR_OFFSET_IN_LINE = BITS_PER_COUNT;
 
     /**
      * Construit un objet {@code PkPatterns}.
@@ -75,7 +75,7 @@ public final class PkPatterns {
         int shift = lineShift(line) + COLOR_OFFSET_IN_LINE;
         int colorIndex = (pkPatterns >>> shift) & COLOR_MASK;
 
-        // D'après l'énoncé : l'index couleur est entre 0 et 4 inclus.
+
         return TileKind.Colored.ALL.get(colorIndex);
     }
 
@@ -134,10 +134,9 @@ public final class PkPatterns {
 
         int shift = lineShift(line);
 
-        // 1) Met à jour le compteur (3 bits).
+
         int updated = setField(pkPatterns, shift, COUNT_MASK, newCount);
 
-        // 2) Met à jour la couleur si la ligne était vide et qu'on ajoute au moins une tuile.
         if (oldCount == 0 && tileCount > 0) {
             updated = setField(updated, shift + COLOR_OFFSET_IN_LINE, COLOR_MASK, color.index());
         }
@@ -211,7 +210,6 @@ public final class PkPatterns {
         return j.toString();
     }
 
-    // ----- Méthodes utilitaires privées -----
 
     private static int lineShift(TileDestination.Pattern line) {
         return line.index() * BITS_PER_LINE;

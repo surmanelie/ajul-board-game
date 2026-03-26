@@ -78,21 +78,16 @@ public record ImmutableGameState(
     public static ImmutableGameState initial(Game game) {
         requireNonNull(game);
 
-        // Sac : toutes les tuiles colorées (sans le marqueur)
         int pkTileBag = PkTileSet.FULL_COLORED;
 
-        // Sources : toutes vides sauf la centrale qui contient le marqueur
         int[] sources = new int[game.tileSourcesCount()];
         sources[0] = PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER);
         ImmutableIntArray pkTileSources = ImmutableIntArray.copyOf(sources);
 
-        // Sources uniques : aucune au départ
         int pkUniqueTileSources = 0;
 
-        // États joueurs : initial
         ImmutableIntArray pkPlayerStates = PkPlayerStates.initial(game);
 
-        // Joueur courant : premier joueur
         PlayerId currentPlayerId = game.playerIds().get(0);
 
         return new ImmutableGameState(
