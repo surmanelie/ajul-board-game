@@ -26,19 +26,20 @@ public final class Points {
 
     private static final int FLOOR_PENALTY = 0x3322211;
     private static final int TOTAL_FLOOR_PENALTY = 0xEB864210;
+    private static final int NIBBLE_MASK = 0xF;
 
     /**
-     * Construit un objet {@code Points}.
+     * Construit un calculateur de points.
      * <p>
-     * Cette classe n'étant composée que de méthodes statiques, ce constructeur n'a pas vocation
-     * à être utilisé.
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé.
      */
     public Points() { }
 
     /**
-     * Retourne le nombre de points dus à l'ajout d'une tuile au mur appartenant
-     * à un groupe horizontal de taille {@code hGroupSize} et à un groupe vertical
-     * de taille {@code vGroupSize}.
+     * Retourne le nombre de points dus à l'ajout d'une tuile au mur
+     * appartenant à un groupe horizontal de taille {@code hGroupSize}
+     * et à un groupe vertical de taille {@code vGroupSize}.
      *
      * @param hGroupSize la taille du groupe horizontal
      * @param vGroupSize la taille du groupe vertical
@@ -48,21 +49,25 @@ public final class Points {
         assert hGroupSize >= 1;
         assert vGroupSize >= 1;
 
-        if (vGroupSize == 1) return hGroupSize;
-        if (hGroupSize == 1) return vGroupSize;
+        if (vGroupSize == 1) {
+            return hGroupSize;
+        }
+        if (hGroupSize == 1) {
+            return vGroupSize;
+        }
         return hGroupSize + vGroupSize;
     }
 
     /**
      * Retourne la pénalité associée à la tuile d'index {@code tileIndex}
-     * de la ligne plancher.
+     * dans la ligne plancher.
      *
      * @param tileIndex l'index de la tuile dans la ligne plancher
      * @return la pénalité associée à cette tuile
      */
     public static int floorPenalty(int tileIndex) {
         assert 0 <= tileIndex && tileIndex < 7;
-        return (FLOOR_PENALTY >>> (4 * tileIndex)) & 0xF;
+        return (FLOOR_PENALTY >>> (4 * tileIndex)) & NIBBLE_MASK;
     }
 
     /**
@@ -74,6 +79,6 @@ public final class Points {
      */
     public static int totalFloorPenalty(int tilesCount) {
         assert 0 <= tilesCount && tilesCount <= 7;
-        return (TOTAL_FLOOR_PENALTY >>> (4 * tilesCount)) & 0xF;
+        return (TOTAL_FLOOR_PENALTY >>> (4 * tilesCount)) & NIBBLE_MASK;
     }
 }

@@ -5,13 +5,14 @@ import ch.epfl.ajul.TileKind;
 import ch.epfl.ajul.TileSource;
 
 /**
- * Méthodes utilitaires pour empaqueter et dépaqueter un coup ({@code Move}) dans un {@code short}.
+ * Méthodes statiques permettant d'empaqueter et de dépaqueter un coup
+ * dans une valeur de type {@code short}.
  * <p>
- * Le coup est encodé sur 10 bits (les 6 bits de poids fort sont à 0) :
+ * Le coup est encodé sur 10 bits, les 6 bits de poids fort restant à 0 :
  * <ul>
- *   <li>4 bits : source ({@link TileSource})</li>
- *   <li>3 bits : couleur ({@link TileKind.Colored})</li>
- *   <li>3 bits : destination ({@link TileDestination})</li>
+ *   <li>4 bits pour la source ({@link TileSource}),</li>
+ *   <li>3 bits pour la couleur ({@link TileKind.Colored}),</li>
+ *   <li>3 bits pour la destination ({@link TileDestination}).</li>
  * </ul>
  *
  * @author Danny Levy (394098)
@@ -32,70 +33,74 @@ public final class PkMove {
     private static final int DESTINATION_MASK = (1 << DESTINATION_BITS) - 1;
 
     /**
-     * Construit un objet {@code PkMove}.
+     * Construit un manipulateur de coups empaquetés.
      * <p>
-     * Cette classe étant uniquement composée de méthodes statiques, ce constructeur n'a pas vocation
-     * à être utilisé, mais il est présent afin de satisfaire les vérifications de signatures.
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé, mais il est conservé afin de
+     * respecter les signatures attendues.
      */
     public PkMove() { }
 
     /**
-     * Empaquète un coup défini par sa source, sa couleur et sa destination dans un {@code short}.
+     * Retourne le coup empaqueté correspondant à la source, à la couleur
+     * et à la destination données.
      *
      * @param source la source des tuiles
      * @param color la couleur des tuiles prélevées
      * @param destination la destination des tuiles
-     * @return le coup empaqueté dans un {@code short}
+     * @return le coup empaqueté correspondant
      */
-    public static short pack(TileSource source,
-                             TileKind.Colored color,
-                             TileDestination destination) {
+    public static short pack(
+            TileSource source,
+            TileKind.Colored color,
+            TileDestination destination
+    ) {
+        int sourceIndex = source.index();
+        int colorIndex = color.index();
+        int destinationIndex = destination.index();
 
-        int s = source.index();
-        int c = color.index();
-        int d = destination.index();
+        int packedMove =
+                (sourceIndex << SOURCE_OFFSET)
+                        | (colorIndex << COLOR_OFFSET)
+                        | (destinationIndex << DESTINATION_OFFSET);
 
-        int packed =
-                (s << SOURCE_OFFSET) |
-                        (c << COLOR_OFFSET) |
-                        (d << DESTINATION_OFFSET);
-
-        return (short) packed;
+        return (short) packedMove;
     }
 
     /**
-     * Extrait la source ({@link TileSource}) du coup empaqueté.
+     * Retourne la source du coup empaqueté donné.
      *
      * @param pkMove le coup empaqueté
-     * @return la source du coup
+     * @return la source du coup empaqueté
      */
     public static TileSource source(short pkMove) {
-        int p = pkMove & 0xFFFF;
-        int s = (p >>> SOURCE_OFFSET) & SOURCE_MASK;
-        return TileSource.ALL.get(s);
+        int unsignedPkMove = pkMove & 0xFFFF;
+        int sourceIndex = (unsignedPkMove >>> SOURCE_OFFSET) & SOURCE_MASK;
+        return TileSource.ALL.get(sourceIndex);
     }
 
     /**
-     * Extrait la couleur ({@link TileKind.Colored}) du coup empaqueté.
+     * Retourne la couleur du coup empaqueté donné.
      *
      * @param pkMove le coup empaqueté
-     * @return la couleur du coup
+     * @return la couleur du coup empaqueté
      */
     public static TileKind.Colored color(short pkMove) {
-        int p = pkMove & 0xFFFF;
-        int c = (p >>> COLOR_OFFSET) & COLOR_MASK;
-        return TileKind.Colored.ALL.get(c);
+        int unsignedPkMove = pkMove & 0xFFFF;
+        int colorIndex = (unsignedPkMove >>> COLOR_OFFSET) & COLOR_MASK;
+        return TileKind.Colored.ALL.get(colorIndex);
     }
 
     /**
-     * Extrait la destination ({@link TileDestination}) du coup empaqueté.
+     * Retourne la destination du coup empaqueté donné.
      *
      * @param pkMove le coup empaqueté
-     * @return la destination du coup
+     * @return la destination du coup empaqueté
      */
     public static TileDestination destination(short pkMove) {
-        int p = pkMove & 0xFFFF;
-        int d = (p >>> DESTINATION_OFFSET) & DESTINATION_MASK;
-        return TileDestination.ALL.get(d);
+        int unsignedPkMove = pkMove & 0xFFFF;
+        int destinationIndex =
+                (unsignedPkMove >>> DESTINATION_OFFSET) & DESTINATION_MASK;
+        return TileDestination.ALL.get(destinationIndex);
     }
 }

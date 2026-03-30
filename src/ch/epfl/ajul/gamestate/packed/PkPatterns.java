@@ -1,4 +1,3 @@
-
 package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.TileDestination;
@@ -7,15 +6,17 @@ import ch.epfl.ajul.TileKind;
 import java.util.StringJoiner;
 
 /**
- * Méthodes utilitaires pour manipuler le contenu des lignes de motif d'un joueur,
- * empaqueté dans un {@code int}.
+ * Méthodes utilitaires pour manipuler les lignes de motif empaquetées d'un joueur.
  * <p>
- * Représentation (selon l'énoncé) :
+ * Représentation :
  * <ul>
- *   <li>Pour chaque ligne de motif k (1..5) : 3 bits pour le nombre de tuiles (0..k),
- *       puis 3 bits pour l'index de la couleur (0..4), ou 0 si la ligne est vide.</li>
- *   <li>Les lignes sont stockées dans l'ordre des indices {@code PATTERN_1..PATTERN_5}.</li>
- *   <li>Les 2 bits de poids fort valent toujours 0 (donc seuls 30 bits sont utilisés).</li>
+ *   <li>pour chaque ligne de motif k (1..5) : 3 bits pour le nombre de tuiles
+ *   (0..k), puis 3 bits pour l'index de la couleur (0..4), ou 0 si la ligne
+ *   est vide,</li>
+ *   <li>les lignes sont stockées dans l'ordre des indices
+ *   {@code PATTERN_1..PATTERN_5},</li>
+ *   <li>les 2 bits de poids fort valent toujours 0, donc seuls 30 bits sont
+ *   utilisés.</li>
  * </ul>
  *
  * @author Danny Levy (394098)
@@ -33,21 +34,21 @@ public final class PkPatterns {
     private static final int COLOR_OFFSET_IN_LINE = BITS_PER_COUNT;
 
     /**
-     * Construit un objet {@code PkPatterns}.
-     * <p>
-     * Cette classe étant uniquement composée de méthodes statiques, ce constructeur n'a pas vocation
-     * à être utilisé, mais il est présent afin de satisfaire les vérifications de signatures.
-     */
-    public PkPatterns() { }
-
-    /**
      * Lignes de motif vides.
      */
     public static final int EMPTY = 0;
 
     /**
-     * Retourne le nombre de tuiles présentes sur la ligne de motif {@code line}
-     * des lignes de motif empaquetées {@code pkPatterns}.
+     * Construit un manipulateur de lignes de motif empaquetées.
+     * <p>
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé, mais il est conservé afin de
+     * respecter les signatures attendues.
+     */
+    public PkPatterns() { }
+
+    /**
+     * Retourne le nombre de tuiles présentes sur la ligne de motif donnée.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @param line la ligne de motif
@@ -59,29 +60,29 @@ public final class PkPatterns {
     }
 
     /**
-     * Retourne la couleur des tuiles présentes sur la ligne de motif {@code line}
-     * des lignes de motif empaquetées {@code pkPatterns}.
+     * Retourne la couleur des tuiles présentes sur la ligne de motif donnée.
      * <p>
-     * La spécification ne définit pas le comportement si la ligne est vide ; on utilise donc
-     * une assertion Java pour garantir que cette méthode est appelée avec une ligne non vide.
+     * Une assertion garantit que la méthode n'est appelée que sur une ligne
+     * non vide.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @param line la ligne de motif
-     * @return la couleur des tuiles sur {@code line}
+     * @return la couleur des tuiles présentes sur {@code line}
      */
-    public static TileKind.Colored color(int pkPatterns, TileDestination.Pattern line) {
+    public static TileKind.Colored color(
+            int pkPatterns,
+            TileDestination.Pattern line
+    ) {
         assert size(pkPatterns, line) > 0;
 
         int shift = lineShift(line) + COLOR_OFFSET_IN_LINE;
         int colorIndex = (pkPatterns >>> shift) & COLOR_MASK;
 
-
         return TileKind.Colored.ALL.get(colorIndex);
     }
 
     /**
-     * Retourne {@code true} ssi la ligne de motif {@code line} des lignes de motif empaquetées
-     * {@code pkPatterns} est pleine.
+     * Retourne {@code true} ssi la ligne de motif donnée est pleine.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @param line la ligne de motif
@@ -92,38 +93,45 @@ public final class PkPatterns {
     }
 
     /**
-     * Retourne {@code true} ssi la ligne de motif {@code line} des lignes de motif empaquetées
-     * {@code pkPatterns} peut contenir des tuiles de couleur {@code color}, c.-à-d. si elle est vide
-     * ou si elle contient déjà des tuiles de cette couleur (indépendamment du fait qu'elle soit pleine).
+     * Retourne {@code true} ssi la ligne de motif donnée peut contenir des
+     * tuiles de la couleur donnée.
+     * <p>
+     * C'est le cas si la ligne est vide, ou si elle contient déjà des tuiles
+     * de cette couleur.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @param line la ligne de motif
      * @param color la couleur à vérifier
      * @return {@code true} ssi {@code line} peut contenir {@code color}
      */
-    public static boolean canContain(int pkPatterns, TileDestination.Pattern line, TileKind.Colored color) {
-        int s = size(pkPatterns, line);
-        return s == 0 || color(pkPatterns, line) == color;
+    public static boolean canContain(
+            int pkPatterns,
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
+        int lineSize = size(pkPatterns, line);
+        return lineSize == 0 || color(pkPatterns, line) == color;
     }
 
     /**
-     * Retourne des lignes de motif empaquetées identiques à {@code pkPatterns} mais avec
-     * {@code tileCount} tuiles de couleur {@code color} ajoutées à la ligne {@code line}.
+     * Retourne des lignes de motif empaquetées identiques à {@code pkPatterns},
+     * mais avec {@code tileCount} tuiles de couleur {@code color} ajoutées à
+     * la ligne {@code line}.
      * <p>
-     * La spécification ne définit pas le comportement si l'ajout est invalide ; on utilise donc
-     * des assertions Java pour garantir que la méthode est appelée avec des arguments valides.
+     * Des assertions garantissent que l'ajout est valide.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @param line la ligne de motif
      * @param tileCount le nombre de tuiles à ajouter
      * @param color la couleur des tuiles ajoutées
-     * @return les nouvelles lignes de motif empaquetées
+     * @return les lignes de motif empaquetées après ajout
      */
-    public static int withAddedTiles(int pkPatterns,
-                                     TileDestination.Pattern line,
-                                     int tileCount,
-                                     TileKind.Colored color) {
-
+    public static int withAddedTiles(
+            int pkPatterns,
+            TileDestination.Pattern line,
+            int tileCount,
+            TileKind.Colored color
+    ) {
         assert tileCount >= 0;
         assert canContain(pkPatterns, line, color);
 
@@ -133,20 +141,23 @@ public final class PkPatterns {
         assert newCount <= line.capacity();
 
         int shift = lineShift(line);
-
-
-        int updated = setField(pkPatterns, shift, COUNT_MASK, newCount);
+        int updatedPatterns = setField(pkPatterns, shift, COUNT_MASK, newCount);
 
         if (oldCount == 0 && tileCount > 0) {
-            updated = setField(updated, shift + COLOR_OFFSET_IN_LINE, COLOR_MASK, color.index());
+            updatedPatterns = setField(
+                    updatedPatterns,
+                    shift + COLOR_OFFSET_IN_LINE,
+                    COLOR_MASK,
+                    color.index()
+            );
         }
 
-        return updated;
+        return updatedPatterns;
     }
 
     /**
-     * Retourne des lignes de motif empaquetées identiques à {@code pkPatterns} mais avec
-     * la ligne {@code line} vide.
+     * Retourne des lignes de motif empaquetées identiques à {@code pkPatterns},
+     * mais avec la ligne donnée vidée.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @param line la ligne de motif à vider
@@ -154,69 +165,76 @@ public final class PkPatterns {
      */
     public static int withEmptyLine(int pkPatterns, TileDestination.Pattern line) {
         int shift = lineShift(line);
-        int cleared = setField(pkPatterns, shift, COUNT_MASK, 0);
-        cleared = setField(cleared, shift + COLOR_OFFSET_IN_LINE, COLOR_MASK, 0);
-        return cleared;
+        int clearedPatterns = setField(pkPatterns, shift, COUNT_MASK, 0);
+        clearedPatterns =
+                setField(clearedPatterns, shift + COLOR_OFFSET_IN_LINE, COLOR_MASK, 0);
+        return clearedPatterns;
     }
 
     /**
-     * Retourne l'ensemble de tuiles empaqueté constitué de toutes les tuiles se trouvant
-     * sur les lignes de motif empaquetées {@code pkPatterns}.
+     * Retourne l'ensemble de tuiles empaqueté constitué de toutes les tuiles
+     * présentes sur les lignes de motif empaquetées données.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @return l'ensemble de tuiles empaqueté correspondant
      */
     public static int asPkTileSet(int pkPatterns) {
-        int acc = PkTileSet.EMPTY;
+        int packedTileSet = PkTileSet.EMPTY;
 
-        for (var line : TileDestination.Pattern.ALL) {
-            int s = size(pkPatterns, line);
-            if (s > 0) {
-                var c = color(pkPatterns, line);
-                acc = PkTileSet.union(acc, PkTileSet.of(s, c));
+        for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
+            int lineSize = size(pkPatterns, line);
+            if (lineSize > 0) {
+                TileKind.Colored lineColor = color(pkPatterns, line);
+                packedTileSet =
+                        PkTileSet.union(packedTileSet, PkTileSet.of(lineSize, lineColor));
             }
         }
 
-        return acc;
+        return packedTileSet;
     }
 
     /**
-     * Retourne une représentation textuelle des lignes de motif empaquetées {@code pkPatterns}.
+     * Retourne une représentation textuelle des lignes de motif empaquetées.
      * <p>
-     * Elle contient cinq éléments (un par ligne), séparés par ", " et entourés de crochets.
-     * Un élément contient la lettre de la couleur répétée {@code size} fois, puis des points "."
-     * jusqu'à atteindre la capacité de la ligne.
-     * Exemple : {@code [C, AA, AAA, EEE., .....]}.
+     * Elle contient cinq éléments, un par ligne, séparés par {@code ", "} et
+     * entourés de crochets. Chaque élément contient la lettre de la couleur
+     * répétée {@code size} fois, puis des points jusqu'à atteindre la capacité
+     * de la ligne.
      *
      * @param pkPatterns les lignes de motif empaquetées
      * @return une représentation textuelle des lignes de motif
      */
     public static String toString(int pkPatterns) {
-        var j = new StringJoiner(", ", "[", "]");
+        StringJoiner joiner = new StringJoiner(", ", "[", "]");
 
-        for (var line : TileDestination.Pattern.ALL) {
-            int s = size(pkPatterns, line);
-            int cap = line.capacity();
+        for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
+            int lineSize = size(pkPatterns, line);
+            int lineCapacity = line.capacity();
 
-            String letters =
-                    s == 0
-                            ? ""
-                            : color(pkPatterns, line).name().repeat(s);
-            String dots = ".".repeat(cap - s);
+            String letters = lineSize == 0
+                    ? ""
+                    : color(pkPatterns, line).name().repeat(lineSize);
+            String dots = ".".repeat(lineCapacity - lineSize);
 
-            j.add(letters + dots);
+            joiner.add(letters + dots);
         }
 
-        return j.toString();
+        return joiner.toString();
     }
 
-
+    /**
+     * Retourne le décalage, en bits, correspondant à la ligne donnée.
+     */
     private static int lineShift(TileDestination.Pattern line) {
         return line.index() * BITS_PER_LINE;
     }
 
+    /**
+     * Remplace le champ de bits désigné par {@code mask} et {@code shift}
+     * par la valeur donnée.
+     */
     private static int setField(int bits, int shift, int mask, int value) {
-        int cleared = bits & ~(mask << shift);
-        return cleared | ((value & mask) << shift);
+        int clearedBits = bits & ~(mask << shift);
+        return clearedBits | ((value & mask) << shift);
     }
 }

@@ -8,11 +8,12 @@ import ch.epfl.ajul.gamestate.packed.PkMove;
 import java.util.Objects;
 
 /**
- * Représente un coup du jeu : une prise de tuiles depuis une source, d'une couleur donnée,
- * vers une destination.
+ * Représente un coup du jeu, c'est-à-dire une prise de tuiles depuis une
+ * source, d'une couleur donnée, vers une destination.
  * <p>
- * Cette classe est un {@code record} (donnée immuable). Elle peut être convertie vers et depuis
- * une représentation empaquetée ({@code short}) via {@link PkMove}.
+ * Cette classe est un {@code record}, donc une donnée immuable. Elle peut être
+ * convertie vers et depuis une représentation empaquetée de type {@code short}
+ * au moyen de {@link PkMove}.
  *
  * @param source la source des tuiles
  * @param tileColor la couleur des tuiles prélevées
@@ -26,6 +27,15 @@ public record Move(
         TileKind.Colored tileColor,
         TileDestination destination
 ) {
+
+    /**
+     * Nombre maximal de coups distincts possibles.
+     */
+    public static final int MAX_MOVES =
+            TileSource.Factory.COUNT
+                    * TileSource.Factory.TILES_PER_FACTORY
+                    * TileDestination.COUNT;
+
     /**
      * Construit un coup.
      *
@@ -38,16 +48,7 @@ public record Move(
     }
 
     /**
-     * Nombre maximal de coups distincts possibles, calculé à partir du nombre de sources,
-     * du nombre de tuiles par fabrique et du nombre de destinations.
-     */
-    public static final int MAX_MOVES =
-            TileSource.Factory.COUNT *
-                    TileSource.Factory.TILES_PER_FACTORY *
-                    TileDestination.COUNT;
-
-    /**
-     * Construit un {@code Move} à partir de sa représentation empaquetée.
+     * Retourne le coup correspondant à la représentation empaquetée donnée.
      *
      * @param pkMove le coup empaqueté
      * @return le coup correspondant
@@ -63,7 +64,7 @@ public record Move(
     /**
      * Retourne la représentation empaquetée de ce coup.
      *
-     * @return le coup empaqueté
+     * @return la représentation empaquetée de ce coup
      */
     public short packed() {
         return PkMove.pack(source, tileColor, destination);

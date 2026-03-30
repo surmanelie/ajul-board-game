@@ -3,16 +3,19 @@ package ch.epfl.ajul.intarray;
 import java.util.Arrays;
 
 /**
- * Implémentation de base partagée par les différents tableaux d'entiers du projet.
+ * Implémentation de base partagée par les différents tableaux d'entiers
+ * du projet.
  * <p>
- * Cette classe fournit les opérations communes d'un tableau d'entiers en lecture seule
- * (taille, accès, copie défensive, conversion en chaîne) et délègue la politique
- * de mutabilité/immutabilité aux sous-classes.
+ * Cette classe fournit les opérations communes d'un tableau d'entiers en
+ * lecture seule, comme la taille, l'accès aux éléments, la copie défensive,
+ * et la conversion en chaîne. Elle délègue la politique de mutabilité ou
+ * d'immutabilité aux sous-classes.
  *
  * @author Danny Levy (394098)
  * @author Elie Menashe Reuben Surman (410685)
  */
 public abstract class AbstractIntArray implements ReadOnlyIntArray {
+
     private final int[] array;
 
     /**
@@ -27,7 +30,7 @@ public abstract class AbstractIntArray implements ReadOnlyIntArray {
     /**
      * Retourne la taille du tableau.
      *
-     * @return le nombre d'éléments
+     * @return le nombre d'éléments du tableau
      */
     @Override
     public int size() {
@@ -35,15 +38,17 @@ public abstract class AbstractIntArray implements ReadOnlyIntArray {
     }
 
     /**
-     * Retourne l'élément à l'indice {@code i}.
+     * Retourne l'élément situé à l'indice donné.
      *
      * @param i l'indice de l'élément
-     * @return la valeur à l'indice {@code i}
+     * @return la valeur située à l'indice {@code i}
      * @throws IndexOutOfBoundsException si {@code i} n'est pas un indice valide
      */
     @Override
     public int get(int i) {
-        if (i < 0 || i >= array.length) throw new IndexOutOfBoundsException();
+        if (i < 0 || i >= array.length) {
+            throw new IndexOutOfBoundsException();
+        }
         return array[i];
     }
 
@@ -58,7 +63,7 @@ public abstract class AbstractIntArray implements ReadOnlyIntArray {
     }
 
     /**
-     * Retourne une copie des valeurs contenues dans ce tableau (copie défensive).
+     * Retourne une copie des valeurs contenues dans ce tableau.
      *
      * @return un nouveau tableau contenant les mêmes valeurs
      */

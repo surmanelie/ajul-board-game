@@ -4,24 +4,31 @@ import ch.epfl.ajul.TileDestination;
 import ch.epfl.ajul.TileKind;
 
 /**
- * Méthodes statiques permettant de manipuler le contenu empaqueté du mur d'un joueur.
+ * Méthodes statiques permettant de manipuler le contenu empaqueté du mur
+ * d'un joueur.
  * <p>
- * Le mur est représenté comme un ensemble empaqueté d'indices de cases occupées.
- * La case d'index {@code i} est occupée si et seulement si le bit d'index {@code i}
- * de l'entier représentant le mur vaut 1.
+ * Le mur est représenté comme un ensemble empaqueté d'indices de cases
+ * occupées. La case d'index {@code i} est occupée si et seulement si
+ * le bit d'index {@code i} de l'entier représentant le mur vaut 1.
  *
  * @author Danny Levy (394098)
  * @author Elie Menashe Reuben Surman (410685)
  */
 public final class PkWall {
 
-    /** Mur vide. */
+    /**
+     * Mur vide.
+     */
     public static final int EMPTY = PkIntSet32.EMPTY;
 
-    /** Largeur du mur. */
+    /**
+     * Largeur du mur.
+     */
     public static final int WALL_WIDTH = 5;
 
-    /** Hauteur du mur. */
+    /**
+     * Hauteur du mur.
+     */
     public static final int WALL_HEIGHT = 5;
 
     private static final int ROW0_MASK = 0b00000_00000_00000_00000_11111;
@@ -37,28 +44,33 @@ public final class PkWall {
     private static final int COLOR_E_MASK = 0b01000_00100_00010_00001_10000;
 
     private static final int[] COLOR_MASKS = {
-            COLOR_A_MASK, COLOR_B_MASK, COLOR_C_MASK, COLOR_D_MASK, COLOR_E_MASK
+            COLOR_A_MASK,
+            COLOR_B_MASK,
+            COLOR_C_MASK,
+            COLOR_D_MASK,
+            COLOR_E_MASK
     };
 
     static {
-        for (int i = 0; i < WALL_HEIGHT; i++) {
-            ROW_MASKS[i] = ROW0_MASK << (i * WALL_WIDTH);
+        for (int row = 0; row < WALL_HEIGHT; row += 1) {
+            ROW_MASKS[row] = ROW0_MASK << (row * WALL_WIDTH);
         }
-        for (int i = 0; i < WALL_WIDTH; i++) {
-            COLUMN_MASKS[i] = COL0_MASK << i;
+        for (int column = 0; column < WALL_WIDTH; column += 1) {
+            COLUMN_MASKS[column] = COL0_MASK << column;
         }
     }
 
     /**
-     * Construit un objet {@code PkWall}.
+     * Construit un manipulateur de murs empaquetés.
      * <p>
-     * Cette classe n'étant composée que de méthodes statiques, ce constructeur n'a pas vocation
-     * à être utilisé.
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé.
      */
     public PkWall() { }
 
     /**
-     * Retourne l'index de la case du mur correspondant à la ligne de motif et à la couleur données.
+     * Retourne l'index de la case du mur correspondant à la ligne de motif
+     * et à la couleur données.
      *
      * @param line la ligne de motif donnée
      * @param color la couleur donnée
@@ -71,7 +83,8 @@ public final class PkWall {
     }
 
     /**
-     * Retourne l'index de la colonne du mur correspondant à la ligne de motif et à la couleur données.
+     * Retourne l'index de la colonne du mur correspondant à la ligne de motif
+     * et à la couleur données.
      *
      * @param line la ligne de motif donnée
      * @param color la couleur donnée
@@ -84,7 +97,8 @@ public final class PkWall {
     }
 
     /**
-     * Retourne la couleur de la case située dans la ligne de motif donnée et la colonne donnée.
+     * Retourne la couleur de la case située dans la ligne de motif donnée
+     * et la colonne donnée.
      *
      * @param line la ligne de motif donnée
      * @param column l'index de la colonne donnée
@@ -93,43 +107,52 @@ public final class PkWall {
     public static TileKind.Colored colorAt(TileDestination.Pattern line, int column) {
         assert line != null;
         assert 0 <= column && column < WALL_WIDTH;
+
         int colorIndex = Math.floorMod(column - line.index(), WALL_WIDTH);
         return TileKind.Colored.ALL.get(colorIndex);
     }
 
     /**
-     * Retourne un mur identique à celui donné, mais dont la case correspondant à la ligne
-     * de motif et à la couleur données est occupée.
+     * Retourne un mur identique à celui donné, mais dont la case correspondant
+     * à la ligne de motif et à la couleur données est occupée.
      *
      * @param pkWall le mur empaqueté donné
      * @param line la ligne de motif donnée
      * @param color la couleur donnée
-     * @return le mur empaqueté obtenu après ajout de la tuile
+     * @return le mur empaqueté après ajout de la tuile
      */
-    public static int withTileAt(int pkWall, TileDestination.Pattern line, TileKind.Colored color) {
+    public static int withTileAt(
+            int pkWall,
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
         assert line != null;
         assert color != null;
         return PkIntSet32.add(pkWall, indexOf(line, color));
     }
 
     /**
-     * Retourne vrai ssi la case du mur correspondant à la ligne de motif et à la couleur données
-     * est occupée.
+     * Retourne vrai ssi la case du mur correspondant à la ligne de motif
+     * et à la couleur données est occupée.
      *
      * @param pkWall le mur empaqueté donné
      * @param line la ligne de motif donnée
      * @param color la couleur donnée
      * @return vrai ssi la case correspondante est occupée
      */
-    public static boolean hasTileAt(int pkWall, TileDestination.Pattern line, TileKind.Colored color) {
+    public static boolean hasTileAt(
+            int pkWall,
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
         assert line != null;
         assert color != null;
         return PkIntSet32.contains(pkWall, indexOf(line, color));
     }
 
     /**
-     * Retourne la taille du groupe horizontal auquel appartiendrait la tuile de la couleur donnée
-     * placée dans la ligne de motif donnée.
+     * Retourne la taille du groupe horizontal auquel appartiendrait la tuile
+     * de la couleur donnée placée dans la ligne de motif donnée.
      *
      * @param pkWall le mur empaqueté donné
      * @param line la ligne de motif donnée
@@ -140,29 +163,32 @@ public final class PkWall {
         assert line != null;
         assert color != null;
 
-        int col = column(line, color);
-        int row = line.index();
+        int columnIndex = column(line, color);
+        int rowIndex = line.index();
+        int groupSize = 1;
 
-        int size = 1;
-
-        for (int c = col - 1; c >= 0; --c) {
-            int index = row * WALL_WIDTH + c;
-            if (!PkIntSet32.contains(pkWall, index)) break;
-            size += 1;
+        for (int c = columnIndex - 1; c >= 0; c -= 1) {
+            int cellIndex = rowIndex * WALL_WIDTH + c;
+            if (!PkIntSet32.contains(pkWall, cellIndex)) {
+                break;
+            }
+            groupSize += 1;
         }
 
-        for (int c = col + 1; c < WALL_WIDTH; ++c) {
-            int index = row * WALL_WIDTH + c;
-            if (!PkIntSet32.contains(pkWall, index)) break;
-            size += 1;
+        for (int c = columnIndex + 1; c < WALL_WIDTH; c += 1) {
+            int cellIndex = rowIndex * WALL_WIDTH + c;
+            if (!PkIntSet32.contains(pkWall, cellIndex)) {
+                break;
+            }
+            groupSize += 1;
         }
 
-        return size;
+        return groupSize;
     }
 
     /**
-     * Retourne la taille du groupe vertical auquel appartiendrait la tuile de la couleur donnée
-     * placée dans la ligne de motif donnée.
+     * Retourne la taille du groupe vertical auquel appartiendrait la tuile
+     * de la couleur donnée placée dans la ligne de motif donnée.
      *
      * @param pkWall le mur empaqueté donné
      * @param line la ligne de motif donnée
@@ -173,24 +199,27 @@ public final class PkWall {
         assert line != null;
         assert color != null;
 
-        int col = column(line, color);
-        int row = line.index();
+        int columnIndex = column(line, color);
+        int rowIndex = line.index();
+        int groupSize = 1;
 
-        int size = 1;
-
-        for (int r = row - 1; r >= 0; --r) {
-            int index = r * WALL_WIDTH + col;
-            if (!PkIntSet32.contains(pkWall, index)) break;
-            size += 1;
+        for (int row = rowIndex - 1; row >= 0; row -= 1) {
+            int cellIndex = row * WALL_WIDTH + columnIndex;
+            if (!PkIntSet32.contains(pkWall, cellIndex)) {
+                break;
+            }
+            groupSize += 1;
         }
 
-        for (int r = row + 1; r < WALL_HEIGHT; ++r) {
-            int index = r * WALL_WIDTH + col;
-            if (!PkIntSet32.contains(pkWall, index)) break;
-            size += 1;
+        for (int row = rowIndex + 1; row < WALL_HEIGHT; row += 1) {
+            int cellIndex = row * WALL_WIDTH + columnIndex;
+            if (!PkIntSet32.contains(pkWall, cellIndex)) {
+                break;
+            }
+            groupSize += 1;
         }
 
-        return size;
+        return groupSize;
     }
 
     /**
@@ -201,7 +230,9 @@ public final class PkWall {
      */
     public static boolean hasFullRow(int pkWall) {
         for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
-            if (isRowFull(pkWall, line)) return true;
+            if (isRowFull(pkWall, line)) {
+                return true;
+            }
         }
         return false;
     }
@@ -215,8 +246,8 @@ public final class PkWall {
      */
     public static boolean isRowFull(int pkWall, TileDestination.Pattern line) {
         assert line != null;
-        int mask = ROW_MASKS[line.index()];
-        return (pkWall & mask) == mask;
+        int rowMask = ROW_MASKS[line.index()];
+        return (pkWall & rowMask) == rowMask;
     }
 
     /**
@@ -228,12 +259,13 @@ public final class PkWall {
      */
     public static boolean isColumnFull(int pkWall, int column) {
         assert 0 <= column && column < WALL_WIDTH;
-        int mask = COLUMN_MASKS[column];
-        return (pkWall & mask) == mask;
+        int columnMask = COLUMN_MASKS[column];
+        return (pkWall & columnMask) == columnMask;
     }
 
     /**
-     * Retourne vrai ssi toutes les cases correspondant à la couleur donnée sont occupées.
+     * Retourne vrai ssi toutes les cases correspondant à la couleur donnée
+     * sont occupées.
      *
      * @param pkWall le mur empaqueté donné
      * @param color la couleur donnée
@@ -241,8 +273,8 @@ public final class PkWall {
      */
     public static boolean isColorFull(int pkWall, TileKind.Colored color) {
         assert color != null;
-        int mask = COLOR_MASKS[color.index()];
-        return (pkWall & mask) == mask;
+        int colorMask = COLOR_MASKS[color.index()];
+        return (pkWall & colorMask) == colorMask;
     }
 
     /**
@@ -252,47 +284,49 @@ public final class PkWall {
      * @return l'ensemble empaqueté des tuiles du mur
      */
     public static int asPkTileSet(int pkWall) {
-        int pkTileSet = PkTileSet.EMPTY;
+        int packedTileSet = PkTileSet.EMPTY;
 
         for (TileKind.Colored color : TileKind.Colored.ALL) {
-            int count = Integer.bitCount(pkWall & COLOR_MASKS[color.index()]);
-            pkTileSet = PkTileSet.union(pkTileSet, PkTileSet.of(count, color));
+            int tileCount = Integer.bitCount(pkWall & COLOR_MASKS[color.index()]);
+            packedTileSet = PkTileSet.union(packedTileSet, PkTileSet.of(tileCount, color));
         }
 
-        return pkTileSet;
+        return packedTileSet;
     }
 
     /**
      * Retourne une représentation textuelle du mur empaqueté donné.
      * <p>
-     * Les lettres minuscules représentent les cases inoccupées et les lettres majuscules
-     * les cases occupées.
+     * Les lettres minuscules représentent les cases inoccupées et les lettres
+     * majuscules les cases occupées.
      *
      * @param pkWall le mur empaqueté donné
      * @return la représentation textuelle du mur
      */
     public static String toString(int pkWall) {
-        StringBuilder b = new StringBuilder();
-        b.append('[');
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
 
-        for (int row = 0; row < WALL_HEIGHT; row++) {
-            if (row > 0) b.append(", ");
+        for (int row = 0; row < WALL_HEIGHT; row += 1) {
+            if (row > 0) {
+                builder.append(", ");
+            }
 
             TileDestination.Pattern line = TileDestination.Pattern.ALL.get(row);
 
-            for (int col = 0; col < WALL_WIDTH; col++) {
-                TileKind.Colored color = colorAt(line, col);
+            for (int column = 0; column < WALL_WIDTH; column += 1) {
+                TileKind.Colored color = colorAt(line, column);
                 char letter = (char) ('a' + color.index());
 
-                if (PkIntSet32.contains(pkWall, row * WALL_WIDTH + col)) {
+                if (PkIntSet32.contains(pkWall, row * WALL_WIDTH + column)) {
                     letter = Character.toUpperCase(letter);
                 }
 
-                b.append(letter);
+                builder.append(letter);
             }
         }
 
-        b.append(']');
-        return b.toString();
+        builder.append(']');
+        return builder.toString();
     }
 }
