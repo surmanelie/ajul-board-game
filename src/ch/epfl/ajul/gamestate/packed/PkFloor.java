@@ -4,6 +4,7 @@ import ch.epfl.ajul.TileKind;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -132,7 +133,7 @@ public final class PkFloor {
      */
     public static int withAddedTiles(int pkFloor, int pkTileSet) {
         int initialSize = size(pkFloor);
-        var tiles = new ArrayList<TileKind>();
+        ArrayList<TileKind> tiles = new ArrayList<TileKind>();
         boolean markerAlreadyPresent = false;
 
         for (int i = 0; i < initialSize; i += 1) {
@@ -143,7 +144,7 @@ public final class PkFloor {
             }
         }
 
-        for (var kind : TileKind.ALL) {
+        for (TileKind kind : TileKind.ALL) {
             int count = PkTileSet.countOf(pkTileSet, kind);
             for (int k = 0; k < count; k += 1) {
                 if (kind == TileKind.FIRST_PLAYER_MARKER) {
@@ -160,8 +161,14 @@ public final class PkFloor {
 
         tiles.sort(Comparator.comparingInt(TileKind::index));
 
-        int newSize = Math.min(MAX_SIZE, tiles.size());
-        var keptTiles = tiles.subList(0, newSize);
+        int newSize;
+        if (tiles.size() < MAX_SIZE) {
+            newSize = tiles.size();
+        } else {
+            newSize = MAX_SIZE;
+        }
+
+        List<TileKind> keptTiles = tiles.subList(0, newSize);
 
         if (tiles.size() > MAX_SIZE && containsMarker) {
             keptTiles.set(MAX_SIZE - 1, TileKind.FIRST_PLAYER_MARKER);

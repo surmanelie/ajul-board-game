@@ -86,8 +86,7 @@ public record ImmutableGameState(
 
         int[] initialSourcesArray = new int[game.tileSourcesCount()];
         initialSourcesArray[0] = PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER);
-        ImmutableIntArray initialPkTileSources =
-                ImmutableIntArray.copyOf(initialSourcesArray);
+        ImmutableIntArray initialPkTileSources = ImmutableIntArray.copyOf(initialSourcesArray);
 
         int initialPkUniqueTileSources = 0;
         ImmutableIntArray initialPkPlayerStates = PkPlayerStates.initial(game);
