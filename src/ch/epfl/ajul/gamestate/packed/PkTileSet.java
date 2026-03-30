@@ -7,13 +7,16 @@ import java.util.StringJoiner;
 import java.util.random.RandomGenerator;
 
 /**
- * Méthodes utilitaires pour manipuler un ensemble de tuiles empaqueté dans un {@code int}.
+ * Méthodes utilitaires pour manipuler un ensemble de tuiles empaqueté dans
+ * une valeur de type {@code int}.
  * <p>
- * Représentation (selon l'énoncé) :
+ * Représentation :
  * <ul>
- *   <li>Comptes des tuiles colorées A..E : 5 champs de 6 bits (bits 0..29).</li>
- *   <li>Marqueur {@code FIRST_PLAYER_MARKER} : bit d'index 30 (0 ou 1).</li>
- *   <li>Bit 31 inutilisé (reste à 0).</li>
+ *   <li>les nombres de tuiles colorées A..E sont stockés dans 5 champs de
+ *   6 bits, sur les bits 0 à 29,</li>
+ *   <li>le marqueur {@code FIRST_PLAYER_MARKER} est stocké dans le bit
+ *   d'index 30,</li>
+ *   <li>le bit 31 est inutilisé et vaut toujours 0.</li>
  * </ul>
  *
  * @author Danny Levy (394098)
@@ -24,14 +27,7 @@ public final class PkTileSet {
     private static final int BITS_PER_COLOR = 6;
     private static final int COLOR_MASK = (1 << BITS_PER_COLOR) - 1;
     private static final int MARKER_BIT_INDEX = 30;
-
-    /**
-     * Construit un objet {@code PkTileSet}.
-     * <p>
-     * Cette classe étant uniquement composée de méthodes statiques, ce constructeur n'a pas vocation
-     * à être utilisé, mais il est présent afin de satisfaire les vérifications de signatures.
-     */
-    public PkTileSet() { }
+    private static final int FULL_COLORED_COUNT = 20;
 
     /**
      * Ensemble vide.
@@ -39,26 +35,37 @@ public final class PkTileSet {
     public static final int EMPTY = 0;
 
     /**
-     * Ensemble contenant 20 tuiles de chaque couleur (A..E), sans marqueur.
+     * Ensemble contenant 20 tuiles de chaque couleur, sans marqueur.
      */
     public static final int FULL_COLORED = computeFullColored();
 
     /**
-     * Ensemble contenant 20 tuiles de chaque couleur (A..E) et le marqueur {@code FIRST_PLAYER_MARKER}.
+     * Ensemble contenant 20 tuiles de chaque couleur et le marqueur de
+     * premier joueur.
      */
-    public static final int FULL = union(FULL_COLORED, of(1, TileKind.FIRST_PLAYER_MARKER));
+    public static final int FULL =
+            union(FULL_COLORED, of(1, TileKind.FIRST_PLAYER_MARKER));
 
     /**
-     * Construit l'ensemble empaqueté contenant {@code count} occurrences de {@code tileKind}
-     * (et aucune autre tuile).
+     * Construit un manipulateur d'ensembles de tuiles empaquetés.
+     * <p>
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé, mais il est conservé afin de
+     * respecter les signatures attendues.
+     */
+    public PkTileSet() { }
+
+    /**
+     * Retourne l'ensemble empaqueté contenant exactement {@code count}
+     * occurrences de {@code tileKind}.
      *
      * @param count le nombre d'occurrences de la tuile
      * @param tileKind le type de tuile
      * @return l'ensemble empaqueté correspondant
      */
     public static int of(int count, TileKind tileKind) {
-        if (tileKind instanceof TileKind.Colored c) {
-            int shift = c.index() * BITS_PER_COLOR;
+        if (tileKind instanceof TileKind.Colored coloredTile) {
+            int shift = coloredTile.index() * BITS_PER_COLOR;
             return (count & COLOR_MASK) << shift;
         } else {
             return (count & 1) << MARKER_BIT_INDEX;
@@ -66,7 +73,7 @@ public final class PkTileSet {
     }
 
     /**
-     * Indique si l'ensemble empaqueté est vide.
+     * Retourne {@code true} si et seulement si l'ensemble empaqueté est vide.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @return {@code true} si et seulement si l'ensemble est vide
@@ -76,15 +83,16 @@ public final class PkTileSet {
     }
 
     /**
-     * Retourne le nombre d'occurrences de {@code tileKind} dans l'ensemble empaqueté.
+     * Retourne le nombre d'occurrences du type de tuile donné dans l'ensemble
+     * empaqueté.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @param tileKind le type de tuile
      * @return le nombre d'occurrences de {@code tileKind}
      */
     public static int countOf(int pkTileSet, TileKind tileKind) {
-        if (tileKind instanceof TileKind.Colored c) {
-            int shift = c.index() * BITS_PER_COLOR;
+        if (tileKind instanceof TileKind.Colored coloredTile) {
+            int shift = coloredTile.index() * BITS_PER_COLOR;
             return (pkTileSet >>> shift) & COLOR_MASK;
         } else {
             return (pkTileSet >>> MARKER_BIT_INDEX) & 1;
@@ -92,21 +100,23 @@ public final class PkTileSet {
     }
 
     /**
-     * Retourne la taille (nombre total de tuiles) de l'ensemble empaqueté.
+     * Retourne le nombre total de tuiles dans l'ensemble empaqueté.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @return le nombre total de tuiles dans l'ensemble
      */
     public static int size(int pkTileSet) {
-        int s = 0;
-        for (var c : TileKind.Colored.ALL) s += countOf(pkTileSet, c);
-        s += countOf(pkTileSet, TileKind.FIRST_PLAYER_MARKER);
-        return s;
+        int totalSize = 0;
+        for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
+            totalSize += countOf(pkTileSet, coloredTile);
+        }
+        totalSize += countOf(pkTileSet, TileKind.FIRST_PLAYER_MARKER);
+        return totalSize;
     }
 
     /**
-     * Retourne l'ensemble composé uniquement des occurrences de {@code tileKind}
-     * présentes dans {@code pkTileSet}.
+     * Retourne le sous-ensemble composé uniquement des occurrences du type de
+     * tuile donné présentes dans {@code pkTileSet}.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @param tileKind le type de tuile à extraire
@@ -117,40 +127,42 @@ public final class PkTileSet {
     }
 
     /**
-     * Ajoute une occurrence de {@code tileKind} à l'ensemble empaqueté.
+     * Retourne un ensemble empaqueté identique à {@code pkTileSet}, mais avec
+     * une occurrence supplémentaire de {@code tileKind}.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @param tileKind le type de tuile à ajouter
      * @return l'ensemble empaqueté après ajout
      */
     public static int add(int pkTileSet, TileKind tileKind) {
-        if (tileKind instanceof TileKind.Colored c) {
-            return pkTileSet + (1 << (c.index() * BITS_PER_COLOR));
+        if (tileKind instanceof TileKind.Colored coloredTile) {
+            return pkTileSet + (1 << (coloredTile.index() * BITS_PER_COLOR));
         } else {
             return pkTileSet + (1 << MARKER_BIT_INDEX);
         }
     }
 
     /**
-     * Retire une occurrence de {@code tileKind} à l'ensemble empaqueté.
+     * Retourne un ensemble empaqueté identique à {@code pkTileSet}, mais avec
+     * une occurrence de moins de {@code tileKind}.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @param tileKind le type de tuile à retirer
      * @return l'ensemble empaqueté après retrait
      */
     public static int remove(int pkTileSet, TileKind tileKind) {
-        if (tileKind instanceof TileKind.Colored c) {
-            return pkTileSet - (1 << (c.index() * BITS_PER_COLOR));
+        if (tileKind instanceof TileKind.Colored coloredTile) {
+            return pkTileSet - (1 << (coloredTile.index() * BITS_PER_COLOR));
         } else {
             return pkTileSet - (1 << MARKER_BIT_INDEX);
         }
     }
 
     /**
-     * Retourne l'union (somme des multiplicités) de deux ensembles empaquetés.
+     * Retourne l'union de deux ensembles empaquetés.
      *
-     * @param pkTileSet1 premier ensemble empaqueté
-     * @param pkTileSet2 second ensemble empaqueté
+     * @param pkTileSet1 le premier ensemble empaqueté
+     * @param pkTileSet2 le second ensemble empaqueté
      * @return l'union des deux ensembles
      */
     public static int union(int pkTileSet1, int pkTileSet2) {
@@ -160,8 +172,8 @@ public final class PkTileSet {
     /**
      * Retourne la différence {@code pkTileSet1 \ pkTileSet2}.
      *
-     * @param pkTileSet1 ensemble empaqueté de départ
-     * @param pkTileSet2 ensemble empaqueté à soustraire
+     * @param pkTileSet1 l'ensemble empaqueté de départ
+     * @param pkTileSet2 l'ensemble empaqueté à soustraire
      * @return la différence des deux ensembles
      */
     public static int difference(int pkTileSet1, int pkTileSet2) {
@@ -169,8 +181,8 @@ public final class PkTileSet {
     }
 
     /**
-     * Copie les tuiles colorées de {@code pkTileSet} dans {@code destination}, dans l'ordre des couleurs
-     * (A puis B puis C puis D puis E), et retourne l'indice suivant la dernière position écrite.
+     * Copie les tuiles colorées de {@code pkTileSet} dans le tableau donné,
+     * dans l'ordre des couleurs A, B, C, D puis E.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @param destination le tableau dans lequel écrire les tuiles colorées
@@ -178,49 +190,58 @@ public final class PkTileSet {
      */
     public static int copyColoredInto(int pkTileSet, TileKind.Colored[] destination) {
         int offset = 0;
-        for (var c : TileKind.Colored.ALL) {
-            int n = countOf(pkTileSet, c);
-            Arrays.fill(destination, offset, offset + n, c);
-            offset += n;
+        for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
+            int count = countOf(pkTileSet, coloredTile);
+            Arrays.fill(destination, offset, offset + count, coloredTile);
+            offset += count;
         }
         return offset;
     }
 
     /**
-     * Échantillonne aléatoirement les tuiles colorées de {@code pkTileSet} par échantillonnage par réservoir
-     * (reservoir sampling), en écrivant le résultat dans {@code destination} à partir de l'indice {@code offset},
-     * et retourne le nouvel offset.
+     * Échantillonne aléatoirement les tuiles colorées de {@code pkTileSet}
+     * par échantillonnage par réservoir, les écrit dans {@code destination}
+     * à partir de {@code offset}, puis retourne le nouvel offset.
      *
      * @param pkTileSet l'ensemble empaqueté
      * @param destination le tableau de destination
      * @param offset l'indice à partir duquel écrire dans {@code destination}
-     * @param randomGenerator le générateur aléatoire utilisé pour l'échantillonnage
+     * @param randomGenerator le générateur aléatoire utilisé
      * @return l'indice suivant la dernière case remplie
+     * @throws IllegalArgumentException si l'offset est invalide ou si le nombre
+     * de tuiles colorées disponibles est insuffisant
      */
-    public static int sampleColoredInto(int pkTileSet,
-                                        TileKind.Colored[] destination,
-                                        int offset,
-                                        RandomGenerator randomGenerator) {
+    public static int sampleColoredInto(
+            int pkTileSet,
+            TileKind.Colored[] destination,
+            int offset,
+            RandomGenerator randomGenerator
+    ) {
+        int sampleSize = destination.length - offset;
+        if (sampleSize < 0) {
+            throw new IllegalArgumentException();
+        }
 
-        int n = destination.length - offset;
-        if (n < 0) throw new IllegalArgumentException();
+        int seenCount = 0;
 
-        int i = 0;
-
-        for (var c : TileKind.Colored.ALL) {
-            int count = countOf(pkTileSet, c);
-            for (int k = 0; k < count; k++) {
-                if (i < n) {
-                    destination[offset + i] = c;
+        for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
+            int count = countOf(pkTileSet, coloredTile);
+            for (int k = 0; k < count; k += 1) {
+                if (seenCount < sampleSize) {
+                    destination[offset + seenCount] = coloredTile;
                 } else {
-                    int j = randomGenerator.nextInt(i + 1);
-                    if (j < n) destination[offset + j] = c;
+                    int randomIndex = randomGenerator.nextInt(seenCount + 1);
+                    if (randomIndex < sampleSize) {
+                        destination[offset + randomIndex] = coloredTile;
+                    }
                 }
-                i += 1;
+                seenCount += 1;
             }
         }
 
-        if (i < n) throw new IllegalArgumentException();
+        if (seenCount < sampleSize) {
+            throw new IllegalArgumentException();
+        }
 
         return offset + size(pkTileSet);
     }
@@ -232,23 +253,36 @@ public final class PkTileSet {
      * @return une représentation textuelle de l'ensemble
      */
     public static String toString(int pkTileSet) {
-        StringJoiner j = new StringJoiner(",", "{", "}");
+        StringJoiner joiner = new StringJoiner(",", "{", "}");
 
-        for (var c : TileKind.Colored.ALL) {
-            int n = countOf(pkTileSet, c);
-            if (n > 0) j.add(n + "*" + c.name());
+        for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
+            int count = countOf(pkTileSet, coloredTile);
+            if (count > 0) {
+                joiner.add(count + "*" + coloredTile.name());
+            }
         }
-        int m = countOf(pkTileSet, TileKind.FIRST_PLAYER_MARKER);
-        if (m > 0) j.add(m + "*" + TileKind.FirstPlayerMarker.FIRST_PLAYER_MARKER.name());
 
-        return j.toString();
+        int markerCount = countOf(pkTileSet, TileKind.FIRST_PLAYER_MARKER);
+        if (markerCount > 0) {
+            joiner.add(
+                    markerCount + "*"
+                            + TileKind.FirstPlayerMarker.FIRST_PLAYER_MARKER.name()
+            );
+        }
+
+        return joiner.toString();
     }
 
+    /**
+     * Construit l'ensemble contenant 20 tuiles de chaque couleur, sans marqueur.
+     *
+     * @return l'ensemble contenant toutes les tuiles colorées
+     */
     private static int computeFullColored() {
-        int r = EMPTY;
-        for (var c : TileKind.Colored.ALL) {
-            r = union(r, of(20, c));
+        int fullColoredSet = EMPTY;
+        for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
+            fullColoredSet = union(fullColoredSet, of(FULL_COLORED_COUNT, coloredTile));
         }
-        return r;
+        return fullColoredSet;
     }
 }

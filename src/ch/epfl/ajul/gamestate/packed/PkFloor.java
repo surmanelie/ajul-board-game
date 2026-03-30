@@ -7,13 +7,13 @@ import java.util.Comparator;
 import java.util.StringJoiner;
 
 /**
- * Méthodes utilitaires pour manipuler le contenu de la ligne plancher d'un joueur,
- * empaqueté dans un {@code int}.
+ * Méthodes utilitaires pour manipuler la ligne plancher empaquetée d'un joueur.
  * <p>
  * Représentation attendue :
  * <ul>
- *   <li>bits 0..2 : taille de la ligne plancher (0..7)</li>
- *   <li>ensuite, 7 emplacements de 3 bits chacun, contenant directement {@code tileKind.index()}</li>
+ *   <li>bits 0..2 : taille de la ligne plancher (0..7),</li>
+ *   <li>puis 7 emplacements de 3 bits chacun, contenant directement
+ *   {@code tileKind.index()}.</li>
  * </ul>
  *
  * @author Danny Levy (394098)
@@ -23,19 +23,20 @@ public final class PkFloor {
 
     private static final int MAX_SIZE = 7;
     private static final int SIZE_MASK = 0b111;
-
-    /**
-     * Construit un manipulateur de ligne plancher empaquetée.
-     * <p>
-     * Cette classe ne contient que des méthodes statiques ; ce constructeur n'a donc
-     * pas vocation à être utilisé.
-     */
-    public PkFloor() { }
+    private static final int BITS_PER_TILE = 3;
 
     /**
      * Ligne plancher vide.
      */
     public static final int EMPTY = 0;
+
+    /**
+     * Construit un manipulateur de ligne plancher empaquetée.
+     * <p>
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé.
+     */
+    public PkFloor() { }
 
     /**
      * Retourne le nombre de tuiles contenues dans la ligne plancher empaquetée donnée.
@@ -48,7 +49,7 @@ public final class PkFloor {
     }
 
     /**
-     * Retourne la tuile d'index {@code i} dans la ligne plancher empaquetée donnée.
+     * Retourne la tuile d'index {@code i} de la ligne plancher empaquetée donnée.
      *
      * @param pkFloor la ligne plancher empaquetée
      * @param i l'index de la tuile à retourner
@@ -56,9 +57,12 @@ public final class PkFloor {
      * @throws IndexOutOfBoundsException si l'index donné n'est pas valide
      */
     public static TileKind tileAt(int pkFloor, int i) {
-        int s = size(pkFloor);
-        if (i < 0 || i >= s) throw new IndexOutOfBoundsException();
-        int kindIndex = (pkFloor >>> (3 * (i + 1))) & 0b111;
+        int floorSize = size(pkFloor);
+        if (i < 0 || i >= floorSize) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        int kindIndex = (pkFloor >>> (BITS_PER_TILE * (i + 1))) & SIZE_MASK;
         return TileKind.ALL.get(kindIndex);
     }
 
@@ -70,27 +74,30 @@ public final class PkFloor {
      * @return vrai ssi elle contient le marqueur de premier joueur
      */
     public static boolean containsFirstPlayerMarker(int pkFloor) {
-        int s = size(pkFloor);
-        for (int i = 0; i < s; i += 1) {
-            if (tileAt(pkFloor, i) == TileKind.FIRST_PLAYER_MARKER) return true;
+        int floorSize = size(pkFloor);
+        for (int i = 0; i < floorSize; i += 1) {
+            if (tileAt(pkFloor, i) == TileKind.FIRST_PLAYER_MARKER) {
+                return true;
+            }
         }
         return false;
     }
 
     /**
-     * Retourne l'ensemble de tuiles empaqueté constitué de toutes les tuiles de la
+     * Retourne l'ensemble de tuiles empaqueté correspondant au contenu de la
      * ligne plancher empaquetée donnée.
      *
      * @param pkFloor la ligne plancher empaquetée
      * @return l'ensemble de tuiles empaqueté correspondant
      */
     public static int asPkTileSet(int pkFloor) {
-        int acc = PkTileSet.EMPTY;
-        int s = size(pkFloor);
-        for (int i = 0; i < s; i += 1) {
-            acc = PkTileSet.add(acc, tileAt(pkFloor, i));
+        int packedTileSet = PkTileSet.EMPTY;
+        int floorSize = size(pkFloor);
+
+        for (int i = 0; i < floorSize; i += 1) {
+            packedTileSet = PkTileSet.add(packedTileSet, tileAt(pkFloor, i));
         }
-        return acc;
+        return packedTileSet;
     }
 
     /**
@@ -100,43 +107,49 @@ public final class PkFloor {
      * @return la représentation textuelle correspondante
      */
     public static String toString(int pkFloor) {
-        var j = new StringJoiner(", ", "[", "]");
-        int s = size(pkFloor);
-        for (int i = 0; i < s; i += 1) {
-            j.add(tileAt(pkFloor, i).toString());
+        StringJoiner joiner = new StringJoiner(", ", "[", "]");
+        int floorSize = size(pkFloor);
+
+        for (int i = 0; i < floorSize; i += 1) {
+            joiner.add(tileAt(pkFloor, i).toString());
         }
-        return j.toString();
+        return joiner.toString();
     }
 
     /**
-     * Retourne une ligne plancher empaquetée identique à {@code pkFloor}, mais à laquelle
-     * ont été ajoutées les tuiles de {@code pkTileSet}.
+     * Retourne une ligne plancher empaquetée identique à {@code pkFloor},
+     * à laquelle ont été ajoutées les tuiles de {@code pkTileSet}.
      * <p>
-     * Si l'ensemble ajouté contient le marqueur de premier joueur et que la ligne plancher
-     * le contient déjà, le marqueur n'est pas dupliqué. Si le nombre total de tuiles dépasse
-     * la capacité de la ligne plancher, seules les sept premières tuiles selon l'ordre des
-     * index sont conservées, avec le marqueur en dernière position s'il est présent.
+     * Si l'ensemble ajouté contient le marqueur de premier joueur et que la
+     * ligne plancher le contient déjà, le marqueur n'est pas dupliqué.
+     * Si le nombre total de tuiles dépasse la capacité de la ligne plancher,
+     * seules les sept premières tuiles selon l'ordre des index sont conservées,
+     * avec le marqueur en dernière position s'il est présent.
      *
      * @param pkFloor la ligne plancher empaquetée initiale
      * @param pkTileSet l'ensemble de tuiles empaqueté à ajouter
      * @return la ligne plancher empaquetée après ajout
      */
     public static int withAddedTiles(int pkFloor, int pkTileSet) {
-        int s0 = size(pkFloor);
+        int initialSize = size(pkFloor);
         var tiles = new ArrayList<TileKind>();
         boolean markerAlreadyPresent = false;
 
-        for (int i = 0; i < s0; i += 1) {
-            TileKind t = tileAt(pkFloor, i);
-            tiles.add(t);
-            if (t == TileKind.FIRST_PLAYER_MARKER) markerAlreadyPresent = true;
+        for (int i = 0; i < initialSize; i += 1) {
+            TileKind tile = tileAt(pkFloor, i);
+            tiles.add(tile);
+            if (tile == TileKind.FIRST_PLAYER_MARKER) {
+                markerAlreadyPresent = true;
+            }
         }
 
         for (var kind : TileKind.ALL) {
             int count = PkTileSet.countOf(pkTileSet, kind);
             for (int k = 0; k < count; k += 1) {
                 if (kind == TileKind.FIRST_PLAYER_MARKER) {
-                    if (markerAlreadyPresent) continue;
+                    if (markerAlreadyPresent) {
+                        continue;
+                    }
                     markerAlreadyPresent = true;
                 }
                 tiles.add(kind);
@@ -148,19 +161,19 @@ public final class PkFloor {
         tiles.sort(Comparator.comparingInt(TileKind::index));
 
         int newSize = Math.min(MAX_SIZE, tiles.size());
-        var kept = tiles.subList(0, newSize);
+        var keptTiles = tiles.subList(0, newSize);
 
         if (tiles.size() > MAX_SIZE && containsMarker) {
-            kept.set(MAX_SIZE - 1, TileKind.FIRST_PLAYER_MARKER);
+            keptTiles.set(MAX_SIZE - 1, TileKind.FIRST_PLAYER_MARKER);
             newSize = MAX_SIZE;
         }
 
-        int packed = 0;
+        int packedFloor = 0;
         for (int i = newSize - 1; i >= 0; i -= 1) {
-            packed = (packed << 3) | kept.get(i).index();
+            packedFloor = (packedFloor << BITS_PER_TILE) | keptTiles.get(i).index();
         }
-        packed = (packed << 3) | newSize;
+        packedFloor = (packedFloor << BITS_PER_TILE) | newSize;
 
-        return packed;
+        return packedFloor;
     }
 }

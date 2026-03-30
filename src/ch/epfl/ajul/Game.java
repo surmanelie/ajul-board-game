@@ -1,7 +1,3 @@
-
-
-
-
 package ch.epfl.ajul;
 
 import java.util.List;
@@ -59,29 +55,32 @@ public final class Game {
      * @param playerDescriptions la liste des descriptions des joueurs
      * @throws NullPointerException si la liste ou l'une de ses entrées est {@code null}
      * @throws IllegalArgumentException si le nombre de joueurs n'est pas entre 2 et 4,
-     *                                  ou si l'ordre des identités n'est pas {@code P1, P2, ...}
+     * ou si l'ordre des identités n'est pas {@code P1, P2, ...}
      */
     public Game(List<PlayerDescription> playerDescriptions) {
         requireNonNull(playerDescriptions);
         this.playerDescriptions = List.copyOf(playerDescriptions);
 
-        int n = this.playerDescriptions.size();
-        Preconditions.checkArgument(2 <= n && n <= 4);
+        int playerCount = this.playerDescriptions.size();
+        Preconditions.checkArgument(2 <= playerCount && playerCount <= 4);
 
-        for (int i = 0; i < n; i++) {
-            PlayerId expected = PlayerId.ALL.get(i);
-            Preconditions.checkArgument(this.playerDescriptions.get(i).id().equals(expected));
+        for (int i = 0; i < playerCount; i += 1) {
+            PlayerId expectedPlayerId = PlayerId.ALL.get(i);
+            Preconditions.checkArgument(
+                    this.playerDescriptions.get(i).id().equals(expectedPlayerId)
+            );
         }
     }
 
     /**
-     * Retourne la taille maximale de la zone centrale, marqueur de premier joueur inclus.
+     * Retourne la taille maximale de la zone centrale, marqueur de premier
+     * joueur inclus.
      *
      * @return la taille maximale de la zone centrale
      */
     public int centralAreaMaxSize() {
-        int m = factoriesCount();
-        return 3 * m + 1;
+        int factoryCount = factoriesCount();
+        return 3 * factoryCount + 1;
     }
 
     /**

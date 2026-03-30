@@ -1,11 +1,12 @@
 package ch.epfl.ajul.gamestate.packed;
 
 /**
- * Méthodes statiques permettant de manipuler un ensemble d'entiers compris entre 0 et 31,
- * empaqueté dans un entier de type {@code int}.
+ * Méthodes statiques permettant de manipuler un ensemble empaqueté
+ * d'entiers compris entre 0 et 31.
  * <p>
- * Dans cette représentation, le bit d'index {@code i} correspond à l'entier {@code i}.
- * Si ce bit vaut 1, alors {@code i} appartient à l'ensemble.
+ * Dans cette représentation, le bit d'index {@code i} correspond à
+ * l'entier {@code i}. Si ce bit vaut 1, alors {@code i} appartient
+ * à l'ensemble.
  *
  * @author Danny Levy (394098)
  * @author Elie Menashe Reuben Surman (410685)
@@ -17,9 +18,9 @@ public final class PkIntSet32 {
      */
     public static final int EMPTY = 0;
 
-
     /**
-     * Retourne vrai si et seulement si l'ensemble empaqueté contient l'entier {@code i}.
+     * Retourne vrai si et seulement si l'ensemble empaqueté contient
+     * l'entier {@code i}.
      *
      * @param pkIntSet32 l'ensemble empaqueté
      * @param i l'entier à tester
@@ -36,14 +37,16 @@ public final class PkIntSet32 {
      *
      * @param pkIntSet32a le premier ensemble empaqueté
      * @param pkIntSet32b le second ensemble empaqueté
-     * @return vrai si et seulement si {@code pkIntSet32a} contient tous les éléments de {@code pkIntSet32b}
+     * @return vrai si et seulement si {@code pkIntSet32a} contient tous les
+     * éléments de {@code pkIntSet32b}
      */
     public static boolean containsAll(int pkIntSet32a, int pkIntSet32b) {
         return (pkIntSet32a & pkIntSet32b) == pkIntSet32b;
     }
 
     /**
-     * Retourne un ensemble empaqueté identique à {@code pkIntSet32}, mais contenant l'entier {@code i}.
+     * Retourne un ensemble empaqueté identique à {@code pkIntSet32},
+     * mais contenant l'entier {@code i}.
      *
      * @param pkIntSet32 l'ensemble empaqueté
      * @param i l'entier à ajouter
@@ -55,7 +58,8 @@ public final class PkIntSet32 {
     }
 
     /**
-     * Retourne un ensemble empaqueté identique à {@code pkIntSet32}, mais ne contenant pas l'entier {@code i}.
+     * Retourne un ensemble empaqueté identique à {@code pkIntSet32},
+     * mais ne contenant pas l'entier {@code i}.
      *
      * @param pkIntSet32 l'ensemble empaqueté
      * @param i l'entier à retirer

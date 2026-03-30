@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
- * Type de tuile du jeu : une tuile colorée (A à E) ou le marqueur du premier joueur.
+ * Type de tuile du jeu, c'est-à-dire une tuile colorée de A à E ou le
+ * marqueur du premier joueur.
  * <p>
- * Les tuiles sont indexées de manière à être cohérentes avec la liste {@link #ALL}.
+ * Les tuiles sont indexées de manière à être cohérentes avec la liste
+ * {@link #ALL}.
  *
  * @author Danny Levy (394098)
  * @author Elie Menashe Reuben Surman (410685)
@@ -58,7 +60,7 @@ public sealed interface TileKind {
      * <p>
      * L'indice correspond à la position de ce type de tuile dans {@link #ALL}.
      *
-     * @return l'indice de la tuile
+     * @return l'indice du type de tuile
      */
     int index();
 
@@ -70,13 +72,17 @@ public sealed interface TileKind {
     int tilesCount();
 
     /**
-     * Tuiles colorées (A à E).
+     * Tuiles colorées, de {@code A} à {@code E}.
      *
      * @author Danny Levy (394098)
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum Colored implements TileKind {
-        A, B, C, D, E;
+        A,
+        B,
+        C,
+        D,
+        E;
 
         /**
          * Liste immuable de toutes les couleurs, dans l'ordre {@code A..E}.
@@ -89,7 +95,9 @@ public sealed interface TileKind {
         public static final int COUNT = ALL.size();
 
         /**
-         * {@inheritDoc}
+         * Retourne l'indice de cette couleur.
+         *
+         * @return l'indice de cette couleur
          */
         @Override
         public int index() {
@@ -97,7 +105,10 @@ public sealed interface TileKind {
         }
 
         /**
-         * {@inheritDoc}
+         * Retourne le nombre total de tuiles de cette couleur présentes
+         * dans la boîte.
+         *
+         * @return le nombre total de tuiles de cette couleur
          */
         @Override
         public int tilesCount() {
@@ -105,18 +116,19 @@ public sealed interface TileKind {
         }
 
         /**
-         * Mélange le tableau {@code tiles} en place, à l'aide du générateur aléatoire donné,
-         * selon l'algorithme de Fisher–Yates.
+         * Mélange le tableau donné en place à l'aide du générateur aléatoire
+         * donné, selon l'algorithme de Fisher-Yates.
          *
-         * @param tiles le tableau à mélanger (modifié en place)
+         * @param tiles le tableau à mélanger
          * @param randomGenerator le générateur aléatoire utilisé pour le mélange
          */
         public static void shuffle(Colored[] tiles, RandomGenerator randomGenerator) {
-            for (int i = 0; i < tiles.length - 1; i++) {
+            for (int i = 0; i < tiles.length - 1; i += 1) {
                 int j = randomGenerator.nextInt(i, tiles.length);
-                Colored temp = tiles[i];
+
+                Colored temporaryTile = tiles[i];
                 tiles[i] = tiles[j];
-                tiles[j] = temp;
+                tiles[j] = temporaryTile;
             }
         }
     }
@@ -131,7 +143,9 @@ public sealed interface TileKind {
         FIRST_PLAYER_MARKER;
 
         /**
-         * {@inheritDoc}
+         * Retourne l'indice du marqueur du premier joueur.
+         *
+         * @return l'indice du marqueur
          */
         @Override
         public int index() {
@@ -139,7 +153,10 @@ public sealed interface TileKind {
         }
 
         /**
-         * {@inheritDoc}
+         * Retourne le nombre total de marqueurs du premier joueur présents
+         * dans la boîte.
+         *
+         * @return le nombre total de marqueurs
          */
         @Override
         public int tilesCount() {

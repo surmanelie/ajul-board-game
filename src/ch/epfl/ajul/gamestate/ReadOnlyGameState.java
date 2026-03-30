@@ -20,9 +20,9 @@ import java.util.List;
 /**
  * Représente un état de partie d'Ajul en lecture seule.
  * <p>
- * L'état est composé de la configuration de la partie, du contenu du sac, du contenu
- * des sources de tuiles, de l'ensemble des sources uniques, de l'état des joueurs
- * et de l'identité du joueur courant.
+ * L'état est composé de la configuration de la partie, du contenu du sac,
+ * du contenu des sources de tuiles, de l'ensemble des sources uniques,
+ * de l'état des joueurs et de l'identité du joueur courant.
  *
  * @author Danny Levy (394098)
  * @author Elie Menashe Reuben Surman (410685)
@@ -37,26 +37,27 @@ public interface ReadOnlyGameState {
     Game game();
 
     /**
-     * Retourne le contenu du sac duquel les tuiles sont extraites pour remplir les fabriques,
-     * sous la forme d'un ensemble de tuiles empaqueté.
+     * Retourne le contenu du sac duquel les tuiles sont extraites pour remplir
+     * les fabriques, sous la forme d'un ensemble de tuiles empaqueté.
      *
      * @return le contenu empaqueté du sac
      */
     int pkTileBag();
 
     /**
-     * Retourne un tableau décrivant le contenu des sources de tuiles, l'élément à l'index
-     * {@code i} de ce tableau étant l'ensemble de tuiles empaqueté correspondant à la source
-     * d'index {@code i}.
+     * Retourne un tableau décrivant le contenu des sources de tuiles.
+     * <p>
+     * L'élément d'index {@code i} de ce tableau est l'ensemble de tuiles
+     * empaqueté correspondant à la source d'index {@code i}.
      *
      * @return le tableau décrivant le contenu des sources de tuiles
      */
     ReadOnlyIntArray pkTileSources();
 
     /**
-     * Retourne l'ensemble empaqueté des index des sources uniques.
+     * Retourne l'ensemble empaqueté des indices des sources uniques.
      *
-     * @return l'ensemble empaqueté des sources uniques
+     * @return l'ensemble empaqueté des indices des sources uniques
      */
     int pkUniqueTileSources();
 
@@ -74,9 +75,10 @@ public interface ReadOnlyGameState {
      */
     PlayerId currentPlayerId();
 
-
     /**
      * Retourne une version immuable de cet état.
+     *
+     * @return une version immuable de cet état
      */
     default ImmutableGameState immutable() {
         return new ImmutableGameState(
@@ -91,116 +93,184 @@ public interface ReadOnlyGameState {
 
     /**
      * Retourne la liste des identités des joueurs de la partie.
+     *
+     * @return la liste des identités des joueurs
      */
     default List<PlayerId> playerIds() {
         return game().playerIds();
     }
 
     /**
-     * Retourne vrai ssi la manche est terminée, c.-à-d. qu'aucune source ne contient
-     * de tuile colorée.
+     * Retourne vrai ssi la manche est terminée, c'est-à-dire si aucune source
+     * ne contient de tuile colorée.
+     *
+     * @return vrai ssi la manche est terminée
      */
     default boolean isRoundOver() {
-        var sources = pkTileSources();
-        for (int i = 0; i < sources.size(); i += 1) {
-            if (coloredCount(sources.get(i)) > 0) return false;
+        ReadOnlyIntArray tileSources = pkTileSources();
+
+        for (int sourceIndex = 0; sourceIndex < tileSources.size(); sourceIndex += 1) {
+            if (coloredCount(tileSources.get(sourceIndex)) > 0) {
+                return false;
+            }
         }
         return true;
     }
 
     /**
-     * Retourne vrai ssi la partie est terminée (manche terminée et au moins un mur a une ligne pleine).
+     * Retourne vrai ssi la partie est terminée.
+     * <p>
+     * La partie est terminée si la manche est terminée et qu'au moins un mur
+     * contient une ligne complète.
+     *
+     * @return vrai ssi la partie est terminée
      */
     default boolean isGameOver() {
-        if (!isRoundOver()) return false;
+        if (!isRoundOver()) {
+            return false;
+        }
 
-        var ps = pkPlayerStates();
-        for (var pid : playerIds()) {
-            if (PkWall.hasFullRow(PkPlayerStates.pkWall(ps, pid))) return true;
+        ReadOnlyIntArray playerStates = pkPlayerStates();
+        for (PlayerId playerId : playerIds()) {
+            if (PkWall.hasFullRow(PkPlayerStates.pkWall(playerStates, playerId))) {
+                return true;
+            }
         }
         return false;
     }
 
     /**
-     * Retourne l'ensemble des tuiles sorties du jeu.
+     * Retourne l'ensemble empaqueté des tuiles sorties du jeu.
+     *
+     * @return l'ensemble empaqueté des tuiles sorties du jeu
      */
     default int pkDiscardedTiles() {
-        int remaining = PkTileSet.FULL;
+        int remainingTiles = PkTileSet.FULL;
 
-        remaining = PkTileSet.difference(remaining, pkTileBag());
+        remainingTiles = PkTileSet.difference(remainingTiles, pkTileBag());
 
-        var sources = pkTileSources();
-        for (int i = 0; i < sources.size(); i += 1) {
-            remaining = PkTileSet.difference(remaining, sources.get(i));
+        ReadOnlyIntArray tileSources = pkTileSources();
+        for (int sourceIndex = 0; sourceIndex < tileSources.size(); sourceIndex += 1) {
+            remainingTiles = PkTileSet.difference(
+                    remainingTiles,
+                    tileSources.get(sourceIndex)
+            );
         }
 
-        var ps = pkPlayerStates();
-        for (var pid : playerIds()) {
-            remaining = PkTileSet.difference(remaining, PkPatterns.asPkTileSet(PkPlayerStates.pkPatterns(ps, pid)));
-            remaining = PkTileSet.difference(remaining, PkFloor.asPkTileSet(PkPlayerStates.pkFloor(ps, pid)));
-            remaining = PkTileSet.difference(remaining, PkWall.asPkTileSet(PkPlayerStates.pkWall(ps, pid)));
+        ReadOnlyIntArray playerStates = pkPlayerStates();
+        for (PlayerId playerId : playerIds()) {
+            remainingTiles = PkTileSet.difference(
+                    remainingTiles,
+                    PkPatterns.asPkTileSet(PkPlayerStates.pkPatterns(playerStates, playerId))
+            );
+            remainingTiles = PkTileSet.difference(
+                    remainingTiles,
+                    PkFloor.asPkTileSet(PkPlayerStates.pkFloor(playerStates, playerId))
+            );
+            remainingTiles = PkTileSet.difference(
+                    remainingTiles,
+                    PkWall.asPkTileSet(PkPlayerStates.pkWall(playerStates, playerId))
+            );
         }
 
-        return remaining;
+        return remainingTiles;
     }
 
     /**
-     * Écrit dans destination tous les coups empaquetés jouables par le joueur courant, et retourne leur nombre.
+     * Écrit dans {@code destination} tous les coups empaquetés jouables par le
+     * joueur courant, puis retourne leur nombre.
+     *
+     * @param destination le tableau recevant les coups empaquetés
+     * @return le nombre de coups écrits dans {@code destination}
      */
     default int validMoves(short[] destination) {
         return validMovesInto(destination, false);
     }
 
     /**
-     * Identique à validMoves mais ne considère que les sources uniques.
+     * Écrit dans {@code destination} tous les coups empaquetés jouables par le
+     * joueur courant en ne considérant que les sources uniques, puis retourne
+     * leur nombre.
+     *
+     * @param destination le tableau recevant les coups empaquetés
+     * @return le nombre de coups écrits dans {@code destination}
      */
     default int uniqueValidMoves(short[] destination) {
         return validMovesInto(destination, true);
     }
 
-
-
+    /**
+     * Écrit dans {@code destination} les coups valides, en ne considérant que
+     * les sources uniques si {@code uniqueOnly} vaut vrai.
+     *
+     * @param destination le tableau recevant les coups empaquetés
+     * @param uniqueOnly vrai ssi seules les sources uniques doivent être considérées
+     * @return le nombre de coups écrits dans {@code destination}
+     */
     private int validMovesInto(short[] destination, boolean uniqueOnly) {
         Preconditions.checkArgument(destination.length >= Move.MAX_MOVES);
 
-        var sources = pkTileSources();
-        var current = currentPlayerId();
-        var ps = pkPlayerStates();
+        ReadOnlyIntArray tileSources = pkTileSources();
+        PlayerId currentPlayer = currentPlayerId();
+        ReadOnlyIntArray playerStates = pkPlayerStates();
 
-        int pkPatterns = PkPlayerStates.pkPatterns(ps, current);
-        int pkWall = PkPlayerStates.pkWall(ps, current);
-
+        int pkPatterns = PkPlayerStates.pkPatterns(playerStates, currentPlayer);
+        int pkWall = PkPlayerStates.pkWall(playerStates, currentPlayer);
         int uniqueSources = pkUniqueTileSources();
 
-        int count = 0;
-        for (int srcIndex = 0; srcIndex < sources.size(); srcIndex += 1) {
-            if (uniqueOnly && !PkIntSet32.contains(uniqueSources, srcIndex)) continue;
+        int moveCount = 0;
 
-            int pkSource = sources.get(srcIndex);
-            var source = TileSource.ALL.get(srcIndex);
+        for (int sourceIndex = 0; sourceIndex < tileSources.size(); sourceIndex += 1) {
+            if (uniqueOnly && !PkIntSet32.contains(uniqueSources, sourceIndex)) {
+                continue;
+            }
 
-            for (var color : TileKind.Colored.ALL) {
-                if (PkTileSet.countOf(pkSource, color) == 0) continue;
+            int pkSource = tileSources.get(sourceIndex);
+            TileSource source = TileSource.ALL.get(sourceIndex);
 
-                for (var line : TileDestination.Pattern.ALL) {
-                    if (PkPatterns.isFull(pkPatterns, line)) continue;
-                    if (PkWall.hasTileAt(pkWall, line, color)) continue;
-                    if (!PkPatterns.canContain(pkPatterns, line, color)) continue;
-
-                    destination[count++] = PkMove.pack(source, color, line);
+            for (TileKind.Colored color : TileKind.Colored.ALL) {
+                if (PkTileSet.countOf(pkSource, color) == 0) {
+                    continue;
                 }
 
-                destination[count++] = PkMove.pack(source, color, TileDestination.FLOOR);
+                for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
+                    if (PkPatterns.isFull(pkPatterns, line)) {
+                        continue;
+                    }
+                    if (PkWall.hasTileAt(pkWall, line, color)) {
+                        continue;
+                    }
+                    if (!PkPatterns.canContain(pkPatterns, line, color)) {
+                        continue;
+                    }
+
+                    destination[moveCount] = PkMove.pack(source, color, line);
+                    moveCount += 1;
+                }
+
+                destination[moveCount] =
+                        PkMove.pack(source, color, TileDestination.FLOOR);
+                moveCount += 1;
             }
         }
-        return count;
+
+        return moveCount;
     }
 
+    /**
+     * Retourne le nombre total de tuiles colorées contenues dans l'ensemble
+     * empaqueté donné.
+     *
+     * @param pkTileSet l'ensemble empaqueté
+     * @return le nombre de tuiles colorées
+     */
     private static int coloredCount(int pkTileSet) {
-        int s = 0;
-        for (var c : TileKind.Colored.ALL) {
-            s += PkTileSet.countOf(pkTileSet, c);
+        int coloredTileCount = 0;
+
+        for (TileKind.Colored color : TileKind.Colored.ALL) {
+            coloredTileCount += PkTileSet.countOf(pkTileSet, color);
         }
-        return s;
+
+        return coloredTileCount;
     }
 }

@@ -25,10 +25,19 @@ import static ch.epfl.ajul.Game.PlayerDescription.PlayerKind.HUMAN;
  * @author Elie Menashe Reuben Surman (410685)
  */
 public final class AjulTUI {
+
     private static final Scanner SCANNER = new Scanner(System.in);
 
+    /**
+     * Constructeur privé de classe utilitaire.
+     */
     private AjulTUI() { }
 
+    /**
+     * Affiche l'état courant de la partie.
+     *
+     * @param gameState l'état de partie à afficher
+     */
     static void printState(ReadOnlyGameState gameState) {
         System.out.println();
         System.out.println("=== ÉTAT DE LA PARTIE ===");
@@ -36,7 +45,10 @@ public final class AjulTUI {
 
         System.out.println("Joueur courant : " + gameState.currentPlayerId());
         System.out.println("Sac            : " + PkTileSet.toString(gameState.pkTileBag()));
-        System.out.println("Sources uniques: " + uniqueSourcesToString(gameState.pkUniqueTileSources()));
+        System.out.println(
+                "Sources uniques: "
+                        + uniqueSourcesToString(gameState.pkUniqueTileSources())
+        );
         System.out.println();
 
         System.out.println("Fabriques / centre :");
@@ -45,11 +57,13 @@ public final class AjulTUI {
             String label = source == TileSource.CENTER_AREA
                     ? "[0] Centre"
                     : "[" + source.index() + "] Fabrique " + source.index();
+
             System.out.println("  " + label + " : " + PkTileSet.toString(pkSource));
         }
 
         System.out.println();
         System.out.println("Joueurs :");
+
         for (Game.PlayerDescription description : gameState.game().playerDescriptions()) {
             PlayerId playerId = description.id();
 
@@ -68,7 +82,13 @@ public final class AjulTUI {
         System.out.println();
     }
 
-
+    /**
+     * Demande au joueur donné de saisir son prochain coup valide.
+     *
+     * @param playerName le nom du joueur
+     * @param gameState l'état courant de la partie
+     * @return le coup choisi
+     */
     static Move queryNextMove(String playerName, ReadOnlyGameState gameState) {
         short[] validMoves = new short[Move.MAX_MOVES];
         int moveCount = gameState.validMoves(validMoves);
@@ -76,7 +96,9 @@ public final class AjulTUI {
         while (true) {
             System.out.println("Quel coup désirez-vous jouer, " + playerName + " ?");
             System.out.println("Format attendu : source-couleur-destination, par ex. 4B2");
-            System.out.println("0 = centre, 1..9 = fabriques ; 0 = floor, 1..5 = lignes de motif");
+            System.out.println(
+                    "0 = centre, 1..9 = fabriques ; 0 = floor, 1..5 = lignes de motif"
+            );
             System.out.print("> ");
 
             String input = SCANNER.nextLine().trim().toUpperCase();
@@ -91,7 +113,9 @@ public final class AjulTUI {
             char destinationChar = input.charAt(2);
 
             if (!Character.isDigit(sourceChar) || !Character.isDigit(destinationChar)) {
-                System.out.println("Entrée invalide : la source et la destination doivent être des chiffres.");
+                System.out.println(
+                        "Entrée invalide : la source et la destination doivent être des chiffres."
+                );
                 continue;
             }
 
@@ -120,7 +144,8 @@ public final class AjulTUI {
             TileDestination destination;
             if (destinationIndex == 0) {
                 destination = TileDestination.FLOOR;
-            } else if (1 <= destinationIndex && destinationIndex <= TileDestination.Pattern.COUNT) {
+            } else if (1 <= destinationIndex
+                    && destinationIndex <= TileDestination.Pattern.COUNT) {
                 destination = TileDestination.Pattern.ALL.get(destinationIndex - 1);
             } else {
                 System.out.println("Destination invalide.");
@@ -129,11 +154,11 @@ public final class AjulTUI {
 
             TileSource source = TileSource.ALL.get(sourceIndex);
             Move move = new Move(source, color, destination);
-            short packed = move.packed();
+            short packedMove = move.packed();
 
             boolean isValid = false;
             for (int i = 0; i < moveCount; i += 1) {
-                if (validMoves[i] == packed) {
+                if (validMoves[i] == packedMove) {
                     isValid = true;
                     break;
                 }
@@ -152,33 +177,49 @@ public final class AjulTUI {
         }
     }
 
+    /**
+     * Retourne une représentation compacte du coup donné.
+     *
+     * @param move le coup
+     * @return la représentation compacte correspondante
+     */
     private static String compactString(Move move) {
         int sourceIndex = move.source().index();
-        char color = move.tileColor().name().charAt(0);
+        char colorLetter = move.tileColor().name().charAt(0);
         int destinationIndex = move.destination() == TileDestination.FLOOR
                 ? 0
                 : ((TileDestination.Pattern) move.destination()).index() + 1;
-        return "" + sourceIndex + color + destinationIndex;
+
+        return "" + sourceIndex + colorLetter + destinationIndex;
     }
 
+    /**
+     * Lance l'interface textuelle du jeu.
+     *
+     * @param args les arguments de la ligne de commande
+     */
     public static void main(String[] args) {
         RandomGenerator randomGenerator = RandomGeneratorFactory.getDefault().create();
 
         System.out.println("=== AJUL TUI ===");
         int playersCount = queryPlayersCount();
 
-        List<Game.PlayerDescription> playerInfos = new ArrayList<>();
+        List<Game.PlayerDescription> playerDescriptions = new ArrayList<>();
         for (int i = 0; i < playersCount; i += 1) {
-            PlayerId id = PlayerId.ALL.get(i);
-            System.out.print("Nom du joueur " + id + " : ");
-            String name = SCANNER.nextLine().trim();
-            if (name.isEmpty()) {
-                name = id.name();
+            PlayerId playerId = PlayerId.ALL.get(i);
+
+            System.out.print("Nom du joueur " + playerId + " : ");
+            String playerName = SCANNER.nextLine().trim();
+            if (playerName.isEmpty()) {
+                playerName = playerId.name();
             }
-            playerInfos.add(new Game.PlayerDescription(id, name, HUMAN));
+
+            playerDescriptions.add(
+                    new Game.PlayerDescription(playerId, playerName, HUMAN)
+            );
         }
 
-        Game game = new Game(playerInfos);
+        Game game = new Game(playerDescriptions);
         MutableGameState gameState =
                 new MutableGameState(ImmutableGameState.initial(game));
 
@@ -219,40 +260,51 @@ public final class AjulTUI {
         }
     }
 
+    /**
+     * Demande le nombre de joueurs jusqu'à obtenir une valeur valide.
+     *
+     * @return le nombre de joueurs
+     */
     private static int queryPlayersCount() {
         while (true) {
             System.out.print("Nombre de joueurs (2 à 4) : ");
             String input = SCANNER.nextLine().trim();
+
             try {
-                int count = Integer.parseInt(input);
-                if (2 <= count && count <= 4) {
-                    return count;
+                int playerCount = Integer.parseInt(input);
+                if (2 <= playerCount && playerCount <= 4) {
+                    return playerCount;
                 }
             } catch (NumberFormatException e) {
                 // Rien à faire, on redemande.
             }
+
             System.out.println("Valeur invalide.");
         }
     }
 
+    /**
+     * Retourne une représentation textuelle de l'ensemble des sources uniques.
+     *
+     * @param pkUniqueSources l'ensemble empaqueté des sources uniques
+     * @return la représentation textuelle correspondante
+     */
     private static String uniqueSourcesToString(int pkUniqueSources) {
-        StringBuilder b = new StringBuilder();
-        b.append('[');
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
 
         boolean first = true;
         for (int i = 0; i < 32; i += 1) {
             if (((pkUniqueSources >>> i) & 1) != 0) {
                 if (!first) {
-                    b.append(", ");
+                    builder.append(", ");
                 }
-                b.append(i);
+                builder.append(i);
                 first = false;
             }
         }
 
-        b.append(']');
-        return b.toString();
+        builder.append(']');
+        return builder.toString();
     }
-
-
 }

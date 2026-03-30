@@ -3,9 +3,11 @@ package ch.epfl.ajul;
 import java.util.List;
 
 /**
- * Source possible de tuiles lors d'un coup : la zone centrale ou une fabrique.
+ * Source possible de tuiles lors d'un coup, c'est-à-dire la zone centrale
+ * ou une fabrique.
  * <p>
- * Les sources sont indexées de manière à être cohérentes avec la liste {@link #ALL}.
+ * Les sources sont indexées de manière à être cohérentes avec la liste
+ * {@link #ALL}.
  *
  * @author Danny Levy (394098)
  * @author Elie Menashe Reuben Surman (410685)
@@ -67,8 +69,15 @@ public sealed interface TileSource {
      */
     List<TileSource> ALL = List.of(
             CENTER_AREA,
-            FACTORY_1, FACTORY_2, FACTORY_3, FACTORY_4, FACTORY_5,
-            FACTORY_6, FACTORY_7, FACTORY_8, FACTORY_9
+            FACTORY_1,
+            FACTORY_2,
+            FACTORY_3,
+            FACTORY_4,
+            FACTORY_5,
+            FACTORY_6,
+            FACTORY_7,
+            FACTORY_8,
+            FACTORY_9
     );
 
     /**
@@ -95,7 +104,9 @@ public sealed interface TileSource {
         CENTER_AREA;
 
         /**
-         * {@inheritDoc}
+         * Retourne l'indice de la zone centrale.
+         *
+         * @return l'indice de la zone centrale
          */
         @Override
         public int index() {
@@ -110,8 +121,15 @@ public sealed interface TileSource {
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum Factory implements TileSource {
-        FACTORY_1, FACTORY_2, FACTORY_3, FACTORY_4, FACTORY_5,
-        FACTORY_6, FACTORY_7, FACTORY_8, FACTORY_9;
+        FACTORY_1,
+        FACTORY_2,
+        FACTORY_3,
+        FACTORY_4,
+        FACTORY_5,
+        FACTORY_6,
+        FACTORY_7,
+        FACTORY_8,
+        FACTORY_9;
 
         /**
          * Nombre de tuiles contenues dans une fabrique.
@@ -119,7 +137,8 @@ public sealed interface TileSource {
         public static final int TILES_PER_FACTORY = 4;
 
         /**
-         * Liste immuable de toutes les fabriques, dans l'ordre {@code FACTORY_1..FACTORY_9}.
+         * Liste immuable de toutes les fabriques, dans l'ordre
+         * {@code FACTORY_1..FACTORY_9}.
          */
         public static final List<Factory> ALL = List.of(values());
 
@@ -129,7 +148,9 @@ public sealed interface TileSource {
         public static final int COUNT = ALL.size();
 
         /**
-         * {@inheritDoc}
+         * Retourne l'indice de cette fabrique.
+         *
+         * @return l'indice de cette fabrique
          */
         @Override
         public int index() {
