@@ -364,16 +364,7 @@ public final class MutableGameState implements ReadOnlyGameState {
 
             for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
                 if (PkWall.isRowFull(pkWall, line)) {
-                    PkPlayerStates.addPoints(
-                            pkPlayerStatesArray,
-                            playerId,
-                            Points.FULL_ROW_BONUS_POINTS
-                    );
-                    pointsObserver.fullRow(
-                            playerId,
-                            line,
-                            Points.FULL_ROW_BONUS_POINTS
-                    );
+                    PkPlayerStates.addPoints( pkPlayerStatesArray,playerId, Points.FULL_ROW_BONUS_POINTS);pointsObserver.fullRow(playerId,line,Points.FULL_ROW_BONUS_POINTS);
                 }
             }
 
