@@ -133,9 +133,11 @@ public final class PkFloor {
      */
     public static int withAddedTiles(int pkFloor, int pkTileSet) {
         int initialSize = size(pkFloor);
-        ArrayList<TileKind> tiles = new ArrayList<TileKind>();
+        ArrayList<TileKind> tiles = new ArrayList<>();
         boolean markerAlreadyPresent = false;
+        boolean markerMustBeAdded = false;
 
+        // 1) Conserver les tuiles déjà présentes DANS LEUR ORDRE ACTUEL
         for (int i = 0; i < initialSize; i += 1) {
             TileKind tile = tileAt(pkFloor, i);
             tiles.add(tile);
@@ -144,42 +146,38 @@ public final class PkFloor {
             }
         }
 
+        // 2) Ajouter les nouvelles tuiles par ordre de sorte
         for (TileKind kind : TileKind.ALL) {
             int count = PkTileSet.countOf(pkTileSet, kind);
+
             for (int k = 0; k < count; k += 1) {
                 if (kind == TileKind.FIRST_PLAYER_MARKER) {
                     if (markerAlreadyPresent) {
                         continue;
                     }
                     markerAlreadyPresent = true;
+                    markerMustBeAdded = true;
                 }
                 tiles.add(kind);
             }
         }
 
-        boolean containsMarker = markerAlreadyPresent;
+        // 3) Tronquer à MAX_SIZE, sauf que le marqueur doit toujours être présent
+        if (tiles.size() > MAX_SIZE) {
+            tiles.subList(MAX_SIZE, tiles.size()).clear();
 
-        tiles.sort(Comparator.comparingInt(TileKind::index));
-
-        int newSize;
-        if (tiles.size() < MAX_SIZE) {
-            newSize = tiles.size();
-        } else {
-            newSize = MAX_SIZE;
+            if (markerMustBeAdded && !tiles.contains(TileKind.FIRST_PLAYER_MARKER)) {
+                tiles.set(MAX_SIZE - 1, TileKind.FIRST_PLAYER_MARKER);
+            }
         }
 
-        List<TileKind> keptTiles = tiles.subList(0, newSize);
-
-        if (tiles.size() > MAX_SIZE && containsMarker) {
-            keptTiles.set(MAX_SIZE - 1, TileKind.FIRST_PLAYER_MARKER);
-            newSize = MAX_SIZE;
-        }
-
+        // 4) Empaqueter en conservant l'ordre logique :
+        //    tileAt(pkFloor, 0) doit être la première tuile de la liste
         int packedFloor = 0;
-        for (int i = newSize - 1; i >= 0; i -= 1) {
-            packedFloor = (packedFloor << BITS_PER_TILE) | keptTiles.get(i).index();
+        for (int i = tiles.size() - 1; i >= 0; i -= 1) {
+            packedFloor = (packedFloor << BITS_PER_TILE) | tiles.get(i).index();
         }
-        packedFloor = (packedFloor << BITS_PER_TILE) | newSize;
+        packedFloor = (packedFloor << BITS_PER_TILE) | tiles.size();
 
         return packedFloor;
     }
