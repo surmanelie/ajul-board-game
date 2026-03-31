@@ -31,7 +31,9 @@ public final class Game {
          * @author Elie Menashe Reuben Surman (410685)
          */
         public enum PlayerKind {
+            /** Joueur humain. */
             HUMAN,
+            /** Joueur contrôlé par l’ordinateur. */
             AI
         }
 
