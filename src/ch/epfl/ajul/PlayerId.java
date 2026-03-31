@@ -9,9 +9,13 @@ import java.util.List;
  * @author Elie Menashe Reuben Surman (410685)
  */
 public enum PlayerId {
+    /** Premier joueur. */
     P1,
+    /** Deuxième joueur. */
     P2,
+    /** Troisième joueur. */
     P3,
+    /** Quatrième joueur. */
     P4;
 
     /**
