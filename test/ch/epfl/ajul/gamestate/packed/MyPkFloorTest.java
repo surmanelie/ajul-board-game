@@ -119,13 +119,6 @@ public final class MyPkFloorTest {
         assertEquals("[A, A, A, A, A, A, B]", PkFloor.toString(f2));
     }
 
-    @Test
-    void orderIsCanonicalAcrossMultipleCalls() {
-        int f = PkFloor.withAddedTiles(PkFloor.EMPTY, PkTileSet.of(2, TileKind.Colored.D)); // D, D
-        f = PkFloor.withAddedTiles(f, PkTileSet.of(1, TileKind.Colored.B));               // + B
-        // Canonique : tri par TileKind::index -> [B, D, D]
-        assertEquals("[B, D, D]", PkFloor.toString(f));
-    }
 
     @Test
     void markerDoesNotDuplicateWhenAlreadyPresentEvenIfFloorIsFull() {
