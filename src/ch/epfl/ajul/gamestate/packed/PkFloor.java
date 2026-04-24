@@ -1,10 +1,6 @@
 package ch.epfl.ajul.gamestate.packed;
-
 import ch.epfl.ajul.TileKind;
-
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -137,7 +133,7 @@ public final class PkFloor {
         boolean markerAlreadyPresent = false;
         boolean markerMustBeAdded = false;
 
-        // 1) Conserver les tuiles déjà présentes DANS LEUR ORDRE ACTUEL
+        // 1) Conserver les tuiles déjà présentes dans l ordre actuel
         for (int i = 0; i < initialSize; i += 1) {
             TileKind tile = tileAt(pkFloor, i);
             tiles.add(tile);

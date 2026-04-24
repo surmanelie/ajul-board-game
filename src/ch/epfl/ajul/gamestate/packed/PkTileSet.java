@@ -1,7 +1,6 @@
 package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.TileKind;
-
 import java.util.Arrays;
 import java.util.StringJoiner;
 import java.util.random.RandomGenerator;
@@ -264,12 +263,8 @@ public final class PkTileSet {
 
         int markerCount = countOf(pkTileSet, TileKind.FIRST_PLAYER_MARKER);
         if (markerCount > 0) {
-            joiner.add(
-                    markerCount + "*"
-                            + TileKind.FirstPlayerMarker.FIRST_PLAYER_MARKER.name()
-            );
+            joiner.add(markerCount + "*" + TileKind.FirstPlayerMarker.FIRST_PLAYER_MARKER.name());
         }
-
         return joiner.toString();
     }
 
