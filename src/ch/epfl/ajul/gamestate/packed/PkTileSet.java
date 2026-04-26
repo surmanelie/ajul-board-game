@@ -105,12 +105,10 @@ public final class PkTileSet {
      * @return le nombre total de tuiles dans l'ensemble
      */
     public static int size(int pkTileSet) {
-        int totalSize = 0;
-        for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
-            totalSize += countOf(pkTileSet, coloredTile);
-        }
-        totalSize += countOf(pkTileSet, TileKind.FIRST_PLAYER_MARKER);
-        return totalSize;
+        int partialSums = pkTileSet + (pkTileSet >>> BITS_PER_COLOR);
+        return (partialSums & COLOR_MASK)
+                + ((partialSums >>> (2 * BITS_PER_COLOR)) & COLOR_MASK)
+                + ((partialSums >>> (4 * BITS_PER_COLOR)) & COLOR_MASK);
     }
 
     /**
@@ -242,7 +240,7 @@ public final class PkTileSet {
             throw new IllegalArgumentException();
         }
 
-        return offset + size(pkTileSet);
+        return offset + sampleSize;
     }
 
     /**
@@ -276,7 +274,10 @@ public final class PkTileSet {
     private static int computeFullColored() {
         int fullColoredSet = EMPTY;
         for (TileKind.Colored coloredTile : TileKind.Colored.ALL) {
-            fullColoredSet = union(fullColoredSet, of(FULL_COLORED_COUNT, coloredTile));
+            fullColoredSet = union(
+                    fullColoredSet,
+                    of(FULL_COLORED_COUNT, coloredTile)
+            );
         }
         return fullColoredSet;
     }

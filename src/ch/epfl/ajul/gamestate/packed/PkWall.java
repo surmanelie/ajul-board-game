@@ -32,10 +32,7 @@ public final class PkWall {
     public static final int WALL_HEIGHT = 5;
 
     private static final int ROW0_MASK = 0b00000_00000_00000_00000_11111;
-    private static final int COL0_MASK = 0b00001_00001_00001_00001_00001;
-
-    private static final int[] ROW_MASKS = new int[WALL_HEIGHT];
-    private static final int[] COLUMN_MASKS = new int[WALL_WIDTH];
+    private static final int COLUMN0_MASK = 0b00001_00001_00001_00001_00001;
 
     private static final int COLOR_A_MASK = 0b10000_01000_00100_00010_00001;
     private static final int COLOR_B_MASK = 0b00001_10000_01000_00100_00010;
@@ -43,6 +40,8 @@ public final class PkWall {
     private static final int COLOR_D_MASK = 0b00100_00010_00001_10000_01000;
     private static final int COLOR_E_MASK = 0b01000_00100_00010_00001_10000;
 
+    private static final int[] ROW_MASKS = new int[WALL_HEIGHT];
+    private static final int[] COLUMN_MASKS = new int[WALL_WIDTH];
     private static final int[] COLOR_MASKS = {
             COLOR_A_MASK,
             COLOR_B_MASK,
@@ -56,7 +55,7 @@ public final class PkWall {
             ROW_MASKS[row] = ROW0_MASK << (row * WALL_WIDTH);
         }
         for (int column = 0; column < WALL_WIDTH; column += 1) {
-            COLUMN_MASKS[column] = COL0_MASK << column;
+            COLUMN_MASKS[column] = COLUMN0_MASK << column;
         }
     }
 
@@ -76,7 +75,10 @@ public final class PkWall {
      * @param color la couleur donnée
      * @return l'index de la case correspondante
      */
-    public static int indexOf(TileDestination.Pattern line, TileKind.Colored color) {
+    public static int indexOf(
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
         assert line != null;
         assert color != null;
         return line.index() * WALL_WIDTH + column(line, color);
@@ -90,7 +92,10 @@ public final class PkWall {
      * @param color la couleur donnée
      * @return l'index de la colonne correspondante
      */
-    public static int column(TileDestination.Pattern line, TileKind.Colored color) {
+    public static int column(
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
         assert line != null;
         assert color != null;
         return Math.floorMod(color.index() + line.index(), WALL_WIDTH);
@@ -104,7 +109,10 @@ public final class PkWall {
      * @param column l'index de la colonne donnée
      * @return la couleur de la case correspondante
      */
-    public static TileKind.Colored colorAt(TileDestination.Pattern line, int column) {
+    public static TileKind.Colored colorAt(
+            TileDestination.Pattern line,
+            int column
+    ) {
         assert line != null;
         assert 0 <= column && column < WALL_WIDTH;
 
@@ -159,31 +167,24 @@ public final class PkWall {
      * @param color la couleur donnée
      * @return la taille du groupe horizontal correspondant
      */
-    public static int hGroupSize(int pkWall, TileDestination.Pattern line, TileKind.Colored color) {
+    public static int hGroupSize(
+            int pkWall,
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
         assert line != null;
         assert color != null;
 
+        int startIndex = indexOf(line, color);
         int columnIndex = column(line, color);
-        int rowIndex = line.index();
-        int groupSize = 1;
 
-        for (int c = columnIndex - 1; c >= 0; c -= 1) {
-            int cellIndex = rowIndex * WALL_WIDTH + c;
-            if (!PkIntSet32.contains(pkWall, cellIndex)) {
-                break;
-            }
-            groupSize += 1;
-        }
-
-        for (int c = columnIndex + 1; c < WALL_WIDTH; c += 1) {
-            int cellIndex = rowIndex * WALL_WIDTH + c;
-            if (!PkIntSet32.contains(pkWall, cellIndex)) {
-                break;
-            }
-            groupSize += 1;
-        }
-
-        return groupSize;
+        return groupSizeFromIndex(
+                pkWall,
+                startIndex,
+                1,
+                columnIndex,
+                WALL_WIDTH - 1 - columnIndex
+        );
     }
 
     /**
@@ -195,31 +196,24 @@ public final class PkWall {
      * @param color la couleur donnée
      * @return la taille du groupe vertical correspondant
      */
-    public static int vGroupSize(int pkWall, TileDestination.Pattern line, TileKind.Colored color) {
+    public static int vGroupSize(
+            int pkWall,
+            TileDestination.Pattern line,
+            TileKind.Colored color
+    ) {
         assert line != null;
         assert color != null;
 
-        int columnIndex = column(line, color);
+        int startIndex = indexOf(line, color);
         int rowIndex = line.index();
-        int groupSize = 1;
 
-        for (int row = rowIndex - 1; row >= 0; row -= 1) {
-            int cellIndex = row * WALL_WIDTH + columnIndex;
-            if (!PkIntSet32.contains(pkWall, cellIndex)) {
-                break;
-            }
-            groupSize += 1;
-        }
-
-        for (int row = rowIndex + 1; row < WALL_HEIGHT; row += 1) {
-            int cellIndex = row * WALL_WIDTH + columnIndex;
-            if (!PkIntSet32.contains(pkWall, cellIndex)) {
-                break;
-            }
-            groupSize += 1;
-        }
-
-        return groupSize;
+        return groupSizeFromIndex(
+                pkWall,
+                startIndex,
+                WALL_WIDTH,
+                rowIndex,
+                WALL_HEIGHT - 1 - rowIndex
+        );
     }
 
     /**
@@ -246,8 +240,7 @@ public final class PkWall {
      */
     public static boolean isRowFull(int pkWall, TileDestination.Pattern line) {
         assert line != null;
-        int rowMask = ROW_MASKS[line.index()];
-        return (pkWall & rowMask) == rowMask;
+        return PkIntSet32.containsAll(pkWall, ROW_MASKS[line.index()]);
     }
 
     /**
@@ -259,8 +252,7 @@ public final class PkWall {
      */
     public static boolean isColumnFull(int pkWall, int column) {
         assert 0 <= column && column < WALL_WIDTH;
-        int columnMask = COLUMN_MASKS[column];
-        return (pkWall & columnMask) == columnMask;
+        return PkIntSet32.containsAll(pkWall, COLUMN_MASKS[column]);
     }
 
     /**
@@ -273,12 +265,12 @@ public final class PkWall {
      */
     public static boolean isColorFull(int pkWall, TileKind.Colored color) {
         assert color != null;
-        int colorMask = COLOR_MASKS[color.index()];
-        return (pkWall & colorMask) == colorMask;
+        return PkIntSet32.containsAll(pkWall, COLOR_MASKS[color.index()]);
     }
 
     /**
-     * Retourne l'ensemble empaqueté des tuiles colorées présentes sur le mur donné.
+     * Retourne l'ensemble empaqueté des tuiles colorées présentes sur le mur
+     * donné.
      *
      * @param pkWall le mur empaqueté donné
      * @return l'ensemble empaqueté des tuiles du mur
@@ -288,7 +280,10 @@ public final class PkWall {
 
         for (TileKind.Colored color : TileKind.Colored.ALL) {
             int tileCount = Integer.bitCount(pkWall & COLOR_MASKS[color.index()]);
-            packedTileSet = PkTileSet.union(packedTileSet, PkTileSet.of(tileCount, color));
+            packedTileSet = PkTileSet.union(
+                    packedTileSet,
+                    PkTileSet.of(tileCount, color)
+            );
         }
 
         return packedTileSet;
@@ -316,17 +311,56 @@ public final class PkWall {
 
             for (int column = 0; column < WALL_WIDTH; column += 1) {
                 TileKind.Colored color = colorAt(line, column);
-                char letter = (char) ('a' + color.index());
+                char c = (char) ('a' + color.index());
 
                 if (PkIntSet32.contains(pkWall, row * WALL_WIDTH + column)) {
-                    letter = Character.toUpperCase(letter);
+                    c = Character.toUpperCase(c);
                 }
 
-                builder.append(letter);
+                builder.append(c);
             }
         }
 
         builder.append(']');
         return builder.toString();
+    }
+
+    /**
+     * Retourne la taille du groupe auquel appartient une case, en explorant
+     * les cases voisines dans une direction négative puis positive.
+     *
+     * @param pkWall le mur empaqueté
+     * @param startIndex l'index de départ
+     * @param delta l'écart entre deux cases voisines
+     * @param negativeSteps le nombre maximal d'étapes vers le côté négatif
+     * @param positiveSteps le nombre maximal d'étapes vers le côté positif
+     * @return la taille du groupe correspondant
+     */
+    private static int groupSizeFromIndex(
+            int pkWall,
+            int startIndex,
+            int delta,
+            int negativeSteps,
+            int positiveSteps
+    ) {
+        int groupSize = 1;
+
+        for (int step = 1; step <= negativeSteps; step += 1) {
+            int index = startIndex - step * delta;
+            if (!PkIntSet32.contains(pkWall, index)) {
+                break;
+            }
+            groupSize += 1;
+        }
+
+        for (int step = 1; step <= positiveSteps; step += 1) {
+            int index = startIndex + step * delta;
+            if (!PkIntSet32.contains(pkWall, index)) {
+                break;
+            }
+            groupSize += 1;
+        }
+
+        return groupSize;
     }
 }
