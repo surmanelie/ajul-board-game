@@ -102,19 +102,12 @@ public interface ReadOnlyGameState {
 
     /**
      * Retourne vrai ssi la manche est terminée, c'est-à-dire si aucune source
-     * ne contient de tuile colorée.
+     * unique ne contient de tuile colorée.
      *
      * @return vrai ssi la manche est terminée
      */
     default boolean isRoundOver() {
-        ReadOnlyIntArray tileSources = pkTileSources();
-
-        for (int sourceIndex = 0; sourceIndex < tileSources.size(); sourceIndex += 1) {
-            if (coloredCount(tileSources.get(sourceIndex)) > 0) {
-                return false;
-            }
-        }
-        return true;
+        return pkUniqueTileSources() == PkIntSet32.EMPTY;
     }
 
     /**
@@ -255,22 +248,5 @@ public interface ReadOnlyGameState {
         }
 
         return moveCount;
-    }
-
-    /**
-     * Retourne le nombre total de tuiles colorées contenues dans l'ensemble
-     * empaqueté donné.
-     *
-     * @param pkTileSet l'ensemble empaqueté
-     * @return le nombre de tuiles colorées
-     */
-    private static int coloredCount(int pkTileSet) {
-        int coloredTileCount = 0;
-
-        for (TileKind.Colored color : TileKind.Colored.ALL) {
-            coloredTileCount += PkTileSet.countOf(pkTileSet, color);
-        }
-
-        return coloredTileCount;
     }
 }

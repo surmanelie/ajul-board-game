@@ -32,6 +32,11 @@ public final class PkPlayerStates {
 
     private static final int INTS_PER_PLAYER = 4;
 
+    private static final int PATTERNS_INDEX = 0;
+    private static final int FLOOR_INDEX = 1;
+    private static final int WALL_INDEX = 2;
+    private static final int POINTS_INDEX = 3;
+
     /**
      * Crée l'état empaqueté initial des joueurs de la partie donnée.
      * <p>
@@ -54,8 +59,11 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @return le contenu empaqueté des lignes de motif du joueur
      */
-    public static int pkPatterns(ReadOnlyIntArray pkPlayerStates, PlayerId playerId) {
-        return pkPlayerStates.get(baseIndex(playerId));
+    public static int pkPatterns(
+            ReadOnlyIntArray pkPlayerStates,
+            PlayerId playerId
+    ) {
+        return pkPlayerStates.get(baseIndex(playerId) + PATTERNS_INDEX);
     }
 
     /**
@@ -65,8 +73,11 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @return le contenu empaqueté de la ligne plancher du joueur
      */
-    public static int pkFloor(ReadOnlyIntArray pkPlayerStates, PlayerId playerId) {
-        return pkPlayerStates.get(baseIndex(playerId) + 1);
+    public static int pkFloor(
+            ReadOnlyIntArray pkPlayerStates,
+            PlayerId playerId
+    ) {
+        return pkPlayerStates.get(baseIndex(playerId) + FLOOR_INDEX);
     }
 
     /**
@@ -76,8 +87,11 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @return le contenu empaqueté du mur du joueur
      */
-    public static int pkWall(ReadOnlyIntArray pkPlayerStates, PlayerId playerId) {
-        return pkPlayerStates.get(baseIndex(playerId) + 2);
+    public static int pkWall(
+            ReadOnlyIntArray pkPlayerStates,
+            PlayerId playerId
+    ) {
+        return pkPlayerStates.get(baseIndex(playerId) + WALL_INDEX);
     }
 
     /**
@@ -87,8 +101,11 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @return le score du joueur
      */
-    public static int points(ReadOnlyIntArray pkPlayerStates, PlayerId playerId) {
-        return pkPlayerStates.get(baseIndex(playerId) + 3);
+    public static int points(
+            ReadOnlyIntArray pkPlayerStates,
+            PlayerId playerId
+    ) {
+        return pkPlayerStates.get(baseIndex(playerId) + POINTS_INDEX);
     }
 
     /**
@@ -98,8 +115,12 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @param pkPatterns le nouveau contenu empaqueté des lignes de motif
      */
-    public static void setPkPatterns(int[] pkPlayerStates, PlayerId playerId, int pkPatterns) {
-        pkPlayerStates[baseIndex(playerId)] = pkPatterns;
+    public static void setPkPatterns(
+            int[] pkPlayerStates,
+            PlayerId playerId,
+            int pkPatterns
+    ) {
+        pkPlayerStates[baseIndex(playerId) + PATTERNS_INDEX] = pkPatterns;
     }
 
     /**
@@ -109,8 +130,12 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @param pkFloor le nouveau contenu empaqueté de la ligne plancher
      */
-    public static void setPkFloor(int[] pkPlayerStates, PlayerId playerId, int pkFloor) {
-        pkPlayerStates[baseIndex(playerId) + 1] = pkFloor;
+    public static void setPkFloor(
+            int[] pkPlayerStates,
+            PlayerId playerId,
+            int pkFloor
+    ) {
+        pkPlayerStates[baseIndex(playerId) + FLOOR_INDEX] = pkFloor;
     }
 
     /**
@@ -120,8 +145,12 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @param pkWall le nouveau contenu empaqueté du mur
      */
-    public static void setPkWall(int[] pkPlayerStates, PlayerId playerId, int pkWall) {
-        pkPlayerStates[baseIndex(playerId) + 2] = pkWall;
+    public static void setPkWall(
+            int[] pkPlayerStates,
+            PlayerId playerId,
+            int pkWall
+    ) {
+        pkPlayerStates[baseIndex(playerId) + WALL_INDEX] = pkWall;
     }
 
     /**
@@ -131,8 +160,12 @@ public final class PkPlayerStates {
      * @param playerId l'identité du joueur
      * @param pointsToAdd le nombre de points à ajouter, éventuellement négatif
      */
-    public static void addPoints(int[] pkPlayerStates, PlayerId playerId, int pointsToAdd) {
-        int scoreIndex = baseIndex(playerId) + 3;
+    public static void addPoints(
+            int[] pkPlayerStates,
+            PlayerId playerId,
+            int pointsToAdd
+    ) {
+        int scoreIndex = baseIndex(playerId) + POINTS_INDEX;
         pkPlayerStates[scoreIndex] += pointsToAdd;
     }
 
