@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Gère la représentation graphique des tuiles à l'écran.
@@ -117,7 +118,7 @@ public final class TileOverlayUI {
                         potentialMoves.clear();
                         if (!validMoves.isEmpty()) {
                             for (Move m : validMoves) {
-                                if (m.source().equals(onSource.source()) && m.color().equals(colored)) {
+                                if (m.source().equals(onSource.source()) && m.tileColor().equals(colored)) {
                                     potentialMoves.add(m);
                                 }
                             }
