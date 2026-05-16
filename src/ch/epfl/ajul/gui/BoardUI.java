@@ -27,7 +27,8 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Gère la partie de l'interface graphique représentant le plateau de jeu.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public final class BoardUI {
 

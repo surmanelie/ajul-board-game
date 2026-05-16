@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * Permet de calculer le rang des différents joueurs à la fin d'une partie d'Ajul.
  * 
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public final class RankComputer {
 

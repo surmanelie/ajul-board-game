@@ -8,7 +8,8 @@ import ch.epfl.ajul.TileSource;
 /**
  * Représente un emplacement logique qu'une tuile peut occuper.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public sealed interface TileLocation permits 
         TileLocation.OffBoard, 

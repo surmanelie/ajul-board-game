@@ -177,7 +177,8 @@ public final class MutableGameState implements ReadOnlyGameState {
             );
             removeTilesFromBag(extractedTiles, 0, extractedTiles.length);
         } else {
-            int discardedTileCount = PkTileSet.size(pkDiscardedTiles());
+            int cachedDiscardedTiles = pkDiscardedTiles();
+            int discardedTileCount = PkTileSet.size(cachedDiscardedTiles);
             int extractedTileCount = Math.min(
                     tilesNeeded,
                     bagTileCount + discardedTileCount
@@ -192,7 +193,7 @@ public final class MutableGameState implements ReadOnlyGameState {
             }
 
             if (offset < extractedTileCount) {
-                pkTileBag = pkDiscardedTiles();
+                pkTileBag = cachedDiscardedTiles;
                 int remainingTileCount = extractedTileCount - offset;
                 int refilledBagTileCount = PkTileSet.size(pkTileBag);
 
@@ -323,7 +324,7 @@ public final class MutableGameState implements ReadOnlyGameState {
         }
 
         PkPlayerStates.setPkFloor(pkPlayerStatesArray, currentPlayerId, pkFloor);
-        updateUniqueTileSourcesAfterMove(sourceIndex, oldSource, oldCenter);
+        updateUniqueTileSources();
         currentPlayerId = nextPlayerId(currentPlayerId);
     }
 
@@ -506,74 +507,11 @@ public final class MutableGameState implements ReadOnlyGameState {
         return PlayerId.ALL.get(nextOrdinal);
     }
 
-    /**
-     * Met à jour l'ensemble empaqueté des indices des sources uniques après
-     * l'exécution d'un coup.
-     *
-     * @param sourceIndex l'indice de la source jouée
-     * @param oldSource l'ancienne valeur de la source jouée
-     * @param oldCenter l'ancienne valeur de la zone centrale
-     */
-    private void updateUniqueTileSourcesAfterMove(
-            int sourceIndex,
-            int oldSource,
-            int oldCenter
-    ) {
-        pkUniqueTileSources = PkIntSet32.remove(pkUniqueTileSources, 0);
-        if (sourceIndex != 0) {
-            pkUniqueTileSources = PkIntSet32.remove(
-                    pkUniqueTileSources,
-                    sourceIndex
-            );
-        }
-
-        ensureRepresentativeOf(oldCenter);
-        ensureRepresentativeOf(pkTileSourcesArray[0]);
-
-        if (sourceIndex != 0) {
-            ensureRepresentativeOf(oldSource);
-            ensureRepresentativeOf(pkTileSourcesArray[sourceIndex]);
-        }
-    }
-
-    /**
-     * Garantit que, si la valeur donnée apparaît dans les sources et contient
-     * des tuiles colorées, alors l'indice de sa première occurrence appartient
-     * à l'ensemble des sources uniques.
-     *
-     * @param pkSource la valeur de source à représenter
-     */
-    private void ensureRepresentativeOf(int pkSource) {
-        if (!containsColoredTiles(pkSource)) {
-            return;
-        }
-
-        int representativeIndex = firstIndexOf(pkSource);
-        if (representativeIndex >= 0) {
-            pkUniqueTileSources = PkIntSet32.add(
-                    pkUniqueTileSources,
-                    representativeIndex
-            );
-        }
-    }
-
-    /**
-     * Retourne l'indice de la première source ayant exactement la valeur donnée.
-     *
-     * @param pkSource la valeur cherchée
-     * @return l'indice de la première occurrence, ou {@code -1} si absente
-     */
-    private int firstIndexOf(int pkSource) {
-        for (int sourceIndex = 0;
-             sourceIndex < pkTileSourcesArray.length;
-             sourceIndex += 1) {
-            if (pkTileSourcesArray[sourceIndex] == pkSource
-                    && containsColoredTiles(pkSource)) {
-                return sourceIndex;
-            }
-        }
-        return -1;
-    }
+    // Note: The incremental update updateUniqueTileSourcesAfterMove has been removed
+    // because it was fundamentally flawed when the center or a factory becomes identical
+    // to another existing factory, causing duplicate representatives.
+    // The full updateUniqueTileSources() is O(N^2) where N <= 9, which is negligible
+    // and guarantees 100% correctness.
 
     /**
      * Met à jour l'ensemble empaqueté des indices des sources uniques.
