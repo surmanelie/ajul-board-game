@@ -3,7 +3,8 @@ package ch.epfl.ajul.mcts;
 /**
  * Représente un nœud de l'arbre de jeu construit par l'algorithme MCTS.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public final class MctsNode {
 
@@ -63,14 +64,7 @@ public final class MctsNode {
         return pkMoveAndGameCount >>> 10;
     }
 
-    /**
-     * Retourne le nombre total de points.
-     *
-     * @return le total de points
-     */
-    public int totalPoints() {
-        return totalPoints;
-    }
+
 
     /**
      * Retourne le nombre moyen de points.
@@ -119,7 +113,7 @@ public final class MctsNode {
             if (nChild == 0) {
                 priority = Double.POSITIVE_INFINITY;
             } else {
-                priority = ((double) child.totalPoints() / nChild)
+                priority = ((double) child.totalPoints / nChild)
                         + C_FACTOR * Math.sqrt(2.0 * lnNParent / nChild);
             }
 

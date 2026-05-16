@@ -17,7 +17,8 @@ import java.util.random.RandomGeneratorFactory;
 /**
  * Joueur utilisant l'algorithme Monte Carlo Tree Search (MCTS) pour jouer à Ajul.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public final class MctsPlayer implements Player {
 
@@ -40,6 +41,7 @@ public final class MctsPlayer implements Player {
 
     @Override
     public Move nextMove(ReadOnlyGameState gameState) {
+        RandomGenerator simRng = rngFactory.create(gameState.pkTileBag());
         MctsNode root = MctsNode.newRoot();
 
         int maxMoves = Move.MAX_MOVES;
@@ -68,8 +70,7 @@ public final class MctsPlayer implements Player {
                         mutState.endRound();
                         if (!mutState.isGameOver()) {
                             // Remplissage déterministe en fonction du nœud exploré
-                            RandomGenerator fillRng = rngFactory.create(currentNode.pkMove());
-                            mutState.fillFactories(fillRng);
+                            mutState.fillFactories(simRng);
                         }
                     }
 
@@ -101,7 +102,6 @@ public final class MctsPlayer implements Player {
             }
 
             // 2. Simulation de la fin de la partie
-            RandomGenerator simRng = rngFactory.create(currentNode.totalPoints());
             while (!mutState.isGameOver()) {
                 if (mutState.isRoundOver()) {
                     mutState.endRound();

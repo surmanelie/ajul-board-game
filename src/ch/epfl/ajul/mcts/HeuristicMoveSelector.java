@@ -16,7 +16,8 @@ import java.util.random.RandomGenerator;
  * Sélectionneur de coups heuristique utilisé par l'algorithme MCTS pour
  * jouer de manière quasi-aléatoire lors des simulations.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public final class HeuristicMoveSelector {
 

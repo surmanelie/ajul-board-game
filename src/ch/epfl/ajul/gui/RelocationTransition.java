@@ -9,7 +9,8 @@ import javafx.util.Duration;
  * Animation déplaçant un nœud graphique sur l'écran au fil du temps en interpolant
  * sa position depuis sa position de départ jusqu'à une coordonnée d'arrivée.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public final class RelocationTransition extends Transition {
 

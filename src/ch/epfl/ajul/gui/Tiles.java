@@ -22,7 +22,8 @@ import java.util.stream.Stream;
  * @param anchors les ancres, associées à leur emplacement
  * @param tiles   les tuiles, regroupées par sorte
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 public record Tiles(
         Map<TileLocation, Node> anchors,
@@ -88,7 +89,6 @@ public record Tiles(
                 rect.getStyleClass().add(onWall.color().name());
             }
 
-            setLocation(rect, loc);
             anchorsMap.put(loc, rect);
         });
 

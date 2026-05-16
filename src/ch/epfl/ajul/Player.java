@@ -6,7 +6,8 @@ import ch.epfl.ajul.gamestate.ReadOnlyGameState;
 /**
  * Représente un joueur d'une partie d'Ajul.
  *
- * @author ...
+ * @author Danny Levy (394098)
+ * @author Elie Menashe Reuben Surman (410685)
  */
 @FunctionalInterface
 public interface Player {
