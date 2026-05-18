@@ -100,7 +100,7 @@ public final class BoardUI {
         int fRow = 0;
         for (TileSource.Factory factory : game.factories()) {
             GridPane fGrid = new GridPane();
-            fGrid.getStyleClass().add("factory");
+            fGrid.getStyleClass().addAll("factory", "tile-source");
             for (int i = 0; i < 4; i++) {
                 Node anchor = anchors.get(new TileLocation.OnSource(factory, i));
                 fGrid.add(anchor, i % 2, i / 2);
@@ -115,6 +115,7 @@ public final class BoardUI {
 
         GridPane centerGrid = new GridPane();
         centerGrid.setId("center-area");
+        centerGrid.getStyleClass().add("tile-source");
         int centerPoints = 3 * game.factoriesCount() + 1;
         for (int i = 0; i < centerPoints; i++) {
             Node anchor = anchors.get(new TileLocation.OnSource(TileSource.CENTER_AREA, i));
@@ -131,7 +132,7 @@ public final class BoardUI {
 
         for (PlayerId pId : game.playerIds()) {
             StackPane playerStack = new StackPane();
-            playerStack.getStyleClass().add("player");
+            playerStack.getStyleClass().add("player-board");
 
             // Classe CSS dynamique : current-player
             gameStateP.map(ImmutableGameState::currentPlayerId).addListener((obs, oldCur, newCur) -> {
@@ -148,12 +149,11 @@ public final class BoardUI {
             }
 
             VBox playerVBox = new VBox();
-            playerVBox.getStyleClass().add("player-board");
 
             // Nom et score (dynamiques)
             Text infoText = new Text();
             infoText.getStyleClass().add("player-info");
-            Game.PlayerDescription pDesc = game.player(pId);
+            Game.PlayerDescription pDesc = game.playerDescriptions().get(pId.ordinal());
             infoText.textProperty().bind(Bindings.format("%s\n%s",
                     pDesc.name(),
                     gameStateP.map(gs -> PkPlayerStates.points(gs.pkPlayerStates(), pId))
@@ -162,6 +162,7 @@ public final class BoardUI {
 
             // Grille pour les lignes de motif, le mur de cases et les bonus
             GridPane boardGrid = new GridPane();
+            boardGrid.getStyleClass().add("lines-and-wall");
 
             for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
                 int rowIndex = line.index();

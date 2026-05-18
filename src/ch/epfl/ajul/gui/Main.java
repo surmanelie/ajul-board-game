@@ -2,6 +2,7 @@ package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
+import ch.epfl.ajul.PointsObserver;
 import ch.epfl.ajul.gamestate.ImmutableGameState;
 import ch.epfl.ajul.gamestate.Move;
 import ch.epfl.ajul.gamestate.MutableGameState;
@@ -12,6 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ch.epfl.ajul.gui.TileLocation;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -46,28 +48,28 @@ public final class Main extends Application {
         // Analyse des arguments
         Parameters params = getParameters();
         List<String> unnamed = params.getUnnamed();
-        if (unnamed.size() < 2 || unnamed.size() > 4) {
+        if (unnamed.isEmpty()) {
+            unnamed = List.of("Aline", "_Robot");
+        } else if (unnamed.size() < 2 || unnamed.size() > 4) {
             throw new Error("Nombre de joueurs invalide. Attendu : entre 2 et 4.");
         }
 
-        Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
+        List<Game.PlayerDescription> playerDescriptions = new ArrayList<>();
         Map<PlayerId, Boolean> isMctsPlayer = new EnumMap<>(PlayerId.class);
-        List<PlayerId> playerIds = new ArrayList<>();
 
         for (int i = 0; i < unnamed.size(); i++) {
             String arg = unnamed.get(i);
             PlayerId id = PlayerId.ALL.get(i);
-            playerIds.add(id);
             if (arg.startsWith("_")) {
-                playerNames.put(id, arg.substring(1));
+                playerDescriptions.add(new Game.PlayerDescription(id, arg.substring(1), Game.PlayerDescription.PlayerKind.AI));
                 isMctsPlayer.put(id, true);
             } else {
-                playerNames.put(id, arg);
+                playerDescriptions.add(new Game.PlayerDescription(id, arg, Game.PlayerDescription.PlayerKind.HUMAN));
                 isMctsPlayer.put(id, false);
             }
         }
 
-        Game game = new Game(playerNames);
+        Game game = new Game(playerDescriptions);
         
         BoardUI[] boardUIRef = new BoardUI[1];
         TileOverlayUI[] tileOverlayUIRef = new TileOverlayUI[1];
@@ -133,7 +135,12 @@ public final class Main extends Application {
 
         // Graphe de scène
         StackPane root = new StackPane(boardUI.root(), tileOverlayUI.root());
-        root.getStylesheets().add("ajul.css");
+        java.net.URL cssUrl = Main.class.getResource("/ajul.css");
+        if (cssUrl != null) {
+            root.getStylesheets().add(cssUrl.toExternalForm());
+        } else {
+            System.err.println("WARNING: ajul.css not found in classpath!");
+        }
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -175,7 +182,7 @@ public final class Main extends Application {
                             validMoves.clear();
                         }
 
-                        mutState.registerMove(move);
+                        mutState.registerMove(move.packed());
                         Platform.runLater(() -> gameStateP.set(mutState.immutable()));
                     }
                 }
