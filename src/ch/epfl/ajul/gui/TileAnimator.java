@@ -159,10 +159,10 @@ public final class TileAnimator {
             demand.wall().sort(Comparator.comparing(TileLocation.OnWall::playerId).thenComparing(TileLocation.OnWall::line).thenComparing(TileLocation.OnWall::color));
             demand.pattern().sort(Comparator.comparing(TileLocation.OnPattern::index));
             demand.floor().sort(Comparator.comparing(TileLocation.OnFloor::index));
-            demand.source().sort(Comparator.<TileLocation.OnSource, Integer>comparing(s -> s.source().ordinal()).thenComparing(TileLocation.OnSource::index));
+            demand.source().sort(Comparator.<TileLocation.OnSource, Integer>comparing(s -> s.source().index()).thenComparing(TileLocation.OnSource::index));
             demand.offBoard().sort(Comparator.comparing(TileLocation.OffBoard::index));
 
-            supply.source().sort(Comparator.<TileLocation.OnSource, Integer>comparing(s -> s.source().ordinal()).reversed().thenComparing(TileLocation.OnSource::index));
+            supply.source().sort(Comparator.<TileLocation.OnSource, Integer>comparing(s -> s.source().index()).reversed().thenComparing(TileLocation.OnSource::index));
 
             // 6. Appariement
             // 6.1 Demande mur -> Offre motif (plus à droite)
@@ -274,7 +274,7 @@ public final class TileAnimator {
         }
         node.setUserData(demandLoc);
         Point2D endPos = layoutFunc.apply(demandLoc);
-        RelocationTransition rt = new RelocationTransition(Duration.millis(500), node, endPos);
+        RelocationTransition rt = new RelocationTransition(node, endPos, Duration.millis(500));
         pt.getChildren().add(rt);
     }
 }
