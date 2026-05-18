@@ -66,12 +66,12 @@ public final class HeuristicMoveSelector {
                 int currentTiles = PkPatterns.size(pkPatterns, patternLine);
                 int missingTiles = patternLine.capacity() - currentTiles;
 
-                if (tilesAvailable == missingTiles) {
+                if (tilesAvailable >= missingTiles) {
+                    // La ligne sera totalement remplie (tuiles exactes ou overflow)
                     exactFill.add(i, rng);
-                } else if (tilesAvailable < missingTiles) {
-                    partialFill.add(i, rng);
                 } else {
-                    others.add(i, rng);
+                    // tilesAvailable < missingTiles : remplissage partiel
+                    partialFill.add(i, rng);
                 }
             } else {
                 others.add(i, rng);

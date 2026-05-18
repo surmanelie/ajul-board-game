@@ -187,4 +187,61 @@ class MyHeuristicMoveSelectorTest {
         int selected = HeuristicMoveSelector.selectMove(rng, state, moves, 1);
         assertEquals(0, selected);
     }
+
+    // ─── Remplissage avec overflow (tilesAvailable > missingTiles) ────────────
+
+    @Test
+    void overflowFillTreatedAsExactFillPreferredOverFloor() {
+        var g = game2();
+        // FACTORY_1 a 5 tuiles A, PATTERN_3 a capacité 3 → overflow → ligne remplie totalement
+        var state = stateWithSourceA(g, 5);
+        var rng = RandomGeneratorFactory.getDefault().create(0);
+
+        short[] moves = {
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.Pattern.PATTERN_3),
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.FLOOR)
+        };
+        int selected = HeuristicMoveSelector.selectMove(rng, state, moves, 2);
+        assertEquals(0, selected,
+                "Un coup qui remplit totalement la ligne (même avec overflow) doit être préféré au plancher");
+    }
+
+    @Test
+    void overflowFillPreferredOverPartialFill() {
+        var g = game2();
+        // FACTORY_1 a 3 tuiles A
+        // moves[0] : PATTERN_2 (capacité 2, 0 rempli) → overflow (3 > 2)
+        // moves[1] : PATTERN_5 (capacité 5, 0 rempli) → partial (3 < 5)
+        var state = stateWithSourceA(g, 3);
+        var rng = RandomGeneratorFactory.getDefault().create(0);
+
+        short[] moves = {
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.Pattern.PATTERN_2),
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.Pattern.PATTERN_5)
+        };
+        int selected = HeuristicMoveSelector.selectMove(rng, state, moves, 2);
+        assertEquals(0, selected,
+                "Le coup qui remplit totalement (avec overflow) doit être préféré au remplissage partiel");
+    }
+
+    @Test
+    void exactFillAndOverflowFillAreInSameCategory() {
+        var g = game2();
+        // FACTORY_1 a 4 tuiles A
+        // moves[0] : PATTERN_4 (capacité 4) → exact fill
+        // moves[1] : PATTERN_3 (capacité 3) → overflow
+        // Les deux doivent être dans la catégorie "exactFill" → le résultat est 0 ou 1
+        // (selon l'échantillonnage au hasard), mais jamais moves[2] (floor)
+        var state = stateWithSourceA(g, 4);
+        var rng = RandomGeneratorFactory.getDefault().create(0);
+
+        short[] moves = {
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.Pattern.PATTERN_4),
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.Pattern.PATTERN_3),
+                PkMove.pack(TileSource.FACTORY_1, TileKind.Colored.A, TileDestination.FLOOR)
+        };
+        int selected = HeuristicMoveSelector.selectMove(rng, state, moves, 3);
+        assertTrue(selected == 0 || selected == 1,
+                "Exact fill et overflow fill doivent être préférés au plancher (index 2)");
+    }
 }

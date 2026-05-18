@@ -80,6 +80,14 @@ public record Tiles(
             }
         }
 
+        // Emplacements hors du plateau : 20 par couleur + 1 pour le marqueur
+        for (TileKind.Colored colored : TileKind.Colored.ALL) {
+            for (int i = 0; i < 20; i++) {
+                locBuilder.add(new TileLocation.OffBoard(colored, i));
+            }
+        }
+        locBuilder.add(new TileLocation.OffBoard(TileKind.FIRST_PLAYER_MARKER, 0));
+
         // Génération et configuration des ancres (visibles ou invisibles selon leur classe)
         locBuilder.build().forEach(loc -> {
             Rectangle rect = new Rectangle(TILE_WIDTH, TILE_HEIGHT);
@@ -89,6 +97,7 @@ public record Tiles(
                 rect.getStyleClass().add(onWall.color().name());
             }
 
+            setLocation(rect, loc);
             anchorsMap.put(loc, rect);
         });
 

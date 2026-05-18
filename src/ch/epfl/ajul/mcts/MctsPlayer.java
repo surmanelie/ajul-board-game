@@ -9,8 +9,6 @@ import ch.epfl.ajul.gamestate.ReadOnlyGameState;
 import ch.epfl.ajul.gamestate.packed.PkPlayerStates;
 
 import java.util.Arrays;
-
-
 import java.util.random.RandomGenerator;
 import java.util.random.RandomGeneratorFactory;
 
@@ -30,6 +28,7 @@ public final class MctsPlayer implements Player {
      *
      * @param rngFactory la fabrique de générateurs aléatoires
      * @param iterations le nombre d'itérations à effectuer par coup
+     * @throws IllegalArgumentException si iterations est inférieur ou égal à zéro
      */
     public MctsPlayer(RandomGeneratorFactory<RandomGenerator> rngFactory, int iterations) {
         if (iterations <= 0) {
@@ -41,7 +40,6 @@ public final class MctsPlayer implements Player {
 
     @Override
     public Move nextMove(ReadOnlyGameState gameState) {
-        RandomGenerator simRng = rngFactory.create(gameState.pkTileBag());
         MctsNode root = MctsNode.newRoot();
 
         int maxMoves = Move.MAX_MOVES;
@@ -50,7 +48,7 @@ public final class MctsPlayer implements Player {
         int[] ranks = new int[playersCount];
         int[] generalizedPoints = new int[playersCount];
 
-        // Tableaux pouvant être agrandis dynamiquement pour mémoriser le chemin exploré lors de la descente
+        // Tableaux redimensionnables pour mémoriser le chemin lors de la descente
         byte[] pathChildIndices = new byte[32];
         byte[] pathPlayerIndices = new byte[32];
 
@@ -65,23 +63,21 @@ public final class MctsPlayer implements Player {
                     break;
                 }
 
-                if (currentNode.children == null) {
-                    if (mutState.isRoundOver()) {
-                        mutState.endRound();
-                        if (!mutState.isGameOver()) {
-                            // Remplissage déterministe en fonction du nœud exploré
-                            mutState.fillFactories(simRng);
-                        }
-                    }
+                // La transition de manche est faite à chaque visite, que les enfants
+                // existent déjà ou non, afin d'éviter de jouer des coups sur un état
+                // en fin de manche.
+                if (mutState.isRoundOver()) {
+                    mutState.endRound();
+                    if (mutState.isGameOver()) break;
+                    // Graine déterministe par nœud : même nœud → même remplissage
+                    mutState.fillFactories(rngFactory.create(currentNode.pkMove()));
+                }
 
-                    if (!mutState.isGameOver()) {
-                        int movesCount = mutState.uniqueValidMoves(validMoves);
-                        currentNode.children = new MctsNode[movesCount];
-                        for (int k = 0; k < movesCount; k++) {
-                            currentNode.children[k] = MctsNode.newMoveNode(validMoves[k]);
-                        }
-                    } else {
-                        break;
+                if (currentNode.children == null) {
+                    int movesCount = mutState.uniqueValidMoves(validMoves);
+                    currentNode.children = new MctsNode[movesCount];
+                    for (int k = 0; k < movesCount; k++) {
+                        currentNode.children[k] = MctsNode.newMoveNode(validMoves[k]);
                     }
                 }
 
@@ -101,7 +97,10 @@ public final class MctsPlayer implements Player {
                 currentNode = nextNode;
             }
 
-            // 2. Simulation de la fin de la partie
+            // 2. Simulation de la fin de la partie avec un générateur propre à cette itération
+            // La graine est le gameCount du nœud évalué : varie au fil du temps et est déterministe
+            RandomGenerator simRng = rngFactory.create(currentNode.gameCount());
+
             while (!mutState.isGameOver()) {
                 if (mutState.isRoundOver()) {
                     mutState.endRound();
@@ -118,7 +117,7 @@ public final class MctsPlayer implements Player {
             }
             mutState.endGame();
 
-            // 3. Calcul et propagation des points
+            // 3. Calcul des points généralisés : Pj = complement_rank × 256 + points_effectifs
             RankComputer.playersRank(mutState, ranks);
             int maxRank = playersCount - 1;
 
@@ -129,6 +128,7 @@ public final class MctsPlayer implements Player {
                 generalizedPoints[playerId.ordinal()] = (complementRank << 8) + points;
             }
 
+            // 4. Propagation : la racine incrémente son compteur sans points
             root.registerEvaluation(0);
             MctsNode traverseNode = root;
             for (int k = 0; k < pathLen; k++) {
@@ -139,15 +139,14 @@ public final class MctsPlayer implements Player {
             }
         }
 
-        double maxAvg = Double.NEGATIVE_INFINITY;
-        int bestChildIndex = -1;
         if (root.children == null) {
             throw new IllegalStateException("Game is already over or no moves available.");
         }
 
+        double maxAvg = Double.NEGATIVE_INFINITY;
+        int bestChildIndex = -1;
         for (int i = 0; i < root.children.length; i++) {
-            MctsNode child = root.children[i];
-            double avg = child.averagePoints();
+            double avg = root.children[i].averagePoints();
             if (avg > maxAvg) {
                 maxAvg = avg;
                 bestChildIndex = i;
