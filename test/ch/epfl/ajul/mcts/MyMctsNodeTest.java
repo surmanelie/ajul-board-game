@@ -17,9 +17,10 @@ class MyMctsNodeTest {
     }
 
     @Test
-    void newRootTotalPointsIsZero() {
+    void newRootTotalPointsIsZeroViaAverage() {
         var root = MctsNode.newRoot();
-        assertEquals(0, root.totalPoints());
+        // gameCount=1, totalPoints=0 → averagePoints = 0/1 = 0.0
+        assertEquals(0.0, root.averagePoints(), 1e-9);
     }
 
     @Test
@@ -50,9 +51,10 @@ class MyMctsNodeTest {
     }
 
     @Test
-    void newMoveNodeTotalPointsIsZero() {
+    void newMoveNodeAveragePointsIsZeroWhenUnvisited() {
         var node = MctsNode.newMoveNode((short) 42);
-        assertEquals(0, node.totalPoints());
+        // gameCount=0 → averagePoints returns 0.0 by convention
+        assertEquals(0.0, node.averagePoints(), 1e-9);
     }
 
     @Test
@@ -100,7 +102,9 @@ class MyMctsNodeTest {
     void registerEvaluationIncreasesTotalPoints() {
         var node = MctsNode.newMoveNode((short) 0);
         node.registerEvaluation(15);
-        assertEquals(15, node.totalPoints());
+        // gameCount=1, totalPoints=15 → averagePoints = 15.0
+        assertEquals(1, node.gameCount());
+        assertEquals(15.0, node.averagePoints(), 1e-9);
     }
 
     @Test
@@ -110,7 +114,8 @@ class MyMctsNodeTest {
         node.registerEvaluation(20);
         node.registerEvaluation(30);
         assertEquals(3, node.gameCount());
-        assertEquals(60, node.totalPoints());
+        // totalPoints=60, gameCount=3 → averagePoints = 20.0
+        assertEquals(20.0, node.averagePoints(), 1e-9);
     }
 
     @Test
@@ -118,7 +123,7 @@ class MyMctsNodeTest {
         var node = MctsNode.newMoveNode((short) 0);
         node.registerEvaluation(0);
         assertEquals(1, node.gameCount());
-        assertEquals(0, node.totalPoints());
+        assertEquals(0.0, node.averagePoints(), 1e-9);
     }
 
     @Test
@@ -126,7 +131,7 @@ class MyMctsNodeTest {
         var node = MctsNode.newMoveNode((short) 0);
         node.registerEvaluation(-5);
         assertEquals(1, node.gameCount());
-        assertEquals(-5, node.totalPoints());
+        assertEquals(-5.0, node.averagePoints(), 1e-9);
     }
 
     // ─── averagePoints ───────────────────────────────────────────────────────

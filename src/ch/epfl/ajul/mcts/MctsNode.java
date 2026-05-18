@@ -64,6 +64,14 @@ public final class MctsNode {
         return pkMoveAndGameCount >>> 10;
     }
 
+    /**
+     * Retourne le nombre total de points.
+     *
+     * @return le nombre total de points
+     */
+    public int totalPoints() {
+        return totalPoints;
+    }
 
 
     /**
