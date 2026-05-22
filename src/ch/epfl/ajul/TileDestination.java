@@ -75,7 +75,16 @@ public sealed interface TileDestination permits TileDestination.Pattern, TileDes
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum Pattern implements TileDestination {
-        PATTERN_1, PATTERN_2, PATTERN_3, PATTERN_4, PATTERN_5;
+        /** Première ligne de motif (capacité 1). */
+        PATTERN_1,
+        /** Deuxième ligne de motif (capacité 2). */
+        PATTERN_2,
+        /** Troisième ligne de motif (capacité 3). */
+        PATTERN_3,
+        /** Quatrième ligne de motif (capacité 4). */
+        PATTERN_4,
+        /** Cinquième ligne de motif (capacité 5). */
+        PATTERN_5;
 
         /**
          * Liste immuable de toutes les lignes de motif, dans l'ordre {@code PATTERN_1..PATTERN_5}.
@@ -111,6 +120,7 @@ public sealed interface TileDestination permits TileDestination.Pattern, TileDes
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum Floor implements TileDestination {
+        /** Plancher (floor), destination de pénalité. */
         FLOOR;
 
         /**

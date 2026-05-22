@@ -23,6 +23,8 @@ public sealed interface TileLocation permits
      *
      * @param kind  la sorte de tuile
      * @param index l'index permettant de distinguer les différentes tuiles de même sorte
+     * @author Danny Levy (394098)
+     * @author Elie Menashe Reuben Surman (410685)
      */
     record OffBoard(TileKind kind, int index) implements TileLocation {}
 
@@ -31,6 +33,8 @@ public sealed interface TileLocation permits
      *
      * @param source la source de tuiles
      * @param index  l'index de l'emplacement dans la source
+     * @author Danny Levy (394098)
+     * @author Elie Menashe Reuben Surman (410685)
      */
     record OnSource(TileSource source, int index) implements TileLocation {}
 
@@ -40,6 +44,8 @@ public sealed interface TileLocation permits
      * @param playerId l'identité du joueur
      * @param line     l'identité de la ligne de motif
      * @param index    l'index sur la ligne
+     * @author Danny Levy (394098)
+     * @author Elie Menashe Reuben Surman (410685)
      */
     record OnPattern(PlayerId playerId, TileDestination.Pattern line, int index) implements TileLocation {}
 
@@ -49,6 +55,8 @@ public sealed interface TileLocation permits
      * @param playerId l'identité du joueur
      * @param line     l'identité de la ligne de mur
      * @param color    la couleur de la tuile pouvant occuper l'emplacement
+     * @author Danny Levy (394098)
+     * @author Elie Menashe Reuben Surman (410685)
      */
     record OnWall(PlayerId playerId, TileDestination.Pattern line, TileKind.Colored color) implements TileLocation {}
 
@@ -57,8 +65,15 @@ public sealed interface TileLocation permits
      *
      * @param playerId l'identité du joueur
      * @param index    l'index sur la ligne (0 à 6)
+     * @author Danny Levy (394098)
+     * @author Elie Menashe Reuben Surman (410685)
      */
     record OnFloor(PlayerId playerId, int index) implements TileLocation {
+        /**
+         * Construit un emplacement sur le plancher du joueur donné à l'index donné.
+         *
+         * @throws IllegalArgumentException si {@code index} n'est pas compris entre 0 et 6 inclus
+         */
         public OnFloor {
             if (index < 0 || index > 6) {
                 throw new IllegalArgumentException("Invalid floor index: " + index);

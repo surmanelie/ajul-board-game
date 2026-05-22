@@ -207,16 +207,10 @@ public final class TileOverlayUI {
         };
 
         Platform.runLater(() -> {
-            gameStateO.addListener((obs, oldState, newState) -> {
+            gameStateO.subscribe(newState -> {
                 Animation anim = TileAnimator.animateTiles(layoutFunc, tiles.tiles(), newState);
                 anim.play();
             });
-
-            // Initial layout animation
-            if (gameStateO.getValue() != null) {
-                Animation initAnim = TileAnimator.animateTiles(layoutFunc, tiles.tiles(), gameStateO.getValue());
-                initAnim.play();
-            }
         });
 
         return new TileOverlayUI(root, tiles);

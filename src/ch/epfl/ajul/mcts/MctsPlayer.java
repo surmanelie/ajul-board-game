@@ -38,6 +38,9 @@ public final class MctsPlayer implements Player {
         this.iterations = iterations;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Move nextMove(ReadOnlyGameState gameState) {
         MctsNode root = MctsNode.newRoot();

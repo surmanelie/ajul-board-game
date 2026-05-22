@@ -240,7 +240,7 @@ public final class PkTileSet {
             throw new IllegalArgumentException();
         }
 
-        return offset + sampleSize;
+        return offset + seenCount;
     }
 
     /**

@@ -14,6 +14,15 @@ package ch.epfl.ajul.gamestate.packed;
 public final class PkIntSet32 {
 
     /**
+     * Construit un manipulateur d'ensembles d'entiers empaquetés.
+     * <p>
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé, mais il est conservé afin de
+     * respecter les signatures attendues.
+     */
+    public PkIntSet32() { }
+
+    /**
      * Ensemble vide.
      */
     public static final int EMPTY = 0;

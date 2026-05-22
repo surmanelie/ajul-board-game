@@ -70,7 +70,7 @@ public final class Main extends Application {
         }
 
         Game game = new Game(playerDescriptions);
-        
+
         BoardUI[] boardUIRef = new BoardUI[1];
         TileOverlayUI[] tileOverlayUIRef = new TileOverlayUI[1];
 
@@ -129,7 +129,7 @@ public final class Main extends Application {
         Tiles tiles = Tiles.create(game);
         BoardUI boardUI = BoardUI.create(tiles.anchors(), gameStateP, potentialMoves, moveAccepted, moveQueue);
         TileOverlayUI tileOverlayUI = TileOverlayUI.create(gameStateP, tiles, validMoves, potentialMoves, moveAccepted);
-        
+
         boardUIRef[0] = boardUI;
         tileOverlayUIRef[0] = tileOverlayUI;
 

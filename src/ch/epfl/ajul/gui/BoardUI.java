@@ -91,7 +91,7 @@ public final class BoardUI {
         // -------------------------
         // 1. SOURCES DE TUILES
         // -------------------------
-        VBox sourcesBox = new VBox();
+        GridPane sourcesBox = new GridPane();
         sourcesBox.setId("tile-sources");
 
         GridPane factoriesGrid = new GridPane();
@@ -122,7 +122,8 @@ public final class BoardUI {
             centerGrid.add(anchor, i % 8, i / 8);
         }
 
-        sourcesBox.getChildren().addAll(factoriesGrid, centerGrid);
+        sourcesBox.add(factoriesGrid, 0, 0, 2, 1);
+        sourcesBox.add(centerGrid, 0, 1, 2, 1);
 
         // -------------------------
         // 2. PLATEAUX DES JOUEURS
