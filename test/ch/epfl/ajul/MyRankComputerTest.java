@@ -224,4 +224,58 @@ class MyRankComputerTest {
             assertTrue(r >= 0);
         }
     }
+
+    // ─── Exemple exact de la consigne §2.4 ───────────────────────────────────
+
+    /**
+     * Reproduit l'exemple exact donné dans la consigne :
+     * P1 : 45 pts / 3 lignes → rang 3
+     * P2 : 55 pts / 2 lignes → rang 0
+     * P3 : 55 pts / 1 ligne  → rang 2
+     * P4 : 55 pts / 2 lignes → rang 0
+     * Aucun joueur n'a le rang 1.
+     */
+    @Test
+    void exactConsigneExampleFourPlayers() {
+        var g = game(4);
+        int[] ps = new int[4 * g.playersCount()];
+
+        // Points
+        PkPlayerStates.addPoints(ps, PlayerId.P1, 45);
+        PkPlayerStates.addPoints(ps, PlayerId.P2, 55);
+        PkPlayerStates.addPoints(ps, PlayerId.P3, 55);
+        PkPlayerStates.addPoints(ps, PlayerId.P4, 55);
+
+        // Lignes complètes : P1=3, P2=2, P3=1, P4=2
+        int[] fullRowCounts = {3, 2, 1, 2};
+        PlayerId[] ids = {PlayerId.P1, PlayerId.P2, PlayerId.P3, PlayerId.P4};
+        TileDestination.Pattern[] patterns = TileDestination.Pattern.ALL.toArray(new TileDestination.Pattern[0]);
+
+        for (int p = 0; p < 4; p++) {
+            int pkWall = PkWall.EMPTY;
+            for (int row = 0; row < fullRowCounts[p]; row++) {
+                for (var color : TileKind.Colored.ALL) {
+                    pkWall = PkWall.withTileAt(pkWall, patterns[row], color);
+                }
+            }
+            PkPlayerStates.setPkWall(ps, ids[p], pkWall);
+        }
+
+        int[] sources = new int[g.tileSourcesCount()];
+        var state = new S(g, PkTileSet.EMPTY, ImmutableIntArray.copyOf(sources), 0,
+                ImmutableIntArray.copyOf(ps), PlayerId.P1);
+
+        int[] ranks = new int[4];
+        RankComputer.playersRank(state, ranks);
+
+        assertEquals(3, ranks[0], "P1 (45pts/3rows) doit être rang 3");
+        assertEquals(0, ranks[1], "P2 (55pts/2rows) doit être rang 0");
+        assertEquals(2, ranks[2], "P3 (55pts/1row)  doit être rang 2");
+        assertEquals(0, ranks[3], "P4 (55pts/2rows) doit être rang 0");
+
+        // Aucun joueur ne doit avoir le rang 1
+        for (int r : ranks) {
+            assertNotEquals(1, r, "Aucun joueur ne doit avoir le rang 1 dans cet exemple");
+        }
+    }
 }

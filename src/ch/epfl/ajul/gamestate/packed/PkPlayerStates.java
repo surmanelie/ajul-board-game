@@ -30,6 +30,15 @@ import ch.epfl.ajul.intarray.ReadOnlyIntArray;
  */
 public final class PkPlayerStates {
 
+    /**
+     * Construit un manipulateur d'états empaquetés de joueurs.
+     * <p>
+     * Cette classe ne contient que des méthodes statiques ; ce constructeur
+     * n'a donc pas vocation à être utilisé, mais il est conservé afin de
+     * respecter les signatures attendues.
+     */
+    public PkPlayerStates() { }
+
     private static final int INTS_PER_PLAYER = 4;
 
     private static final int PATTERNS_INDEX = 0;

@@ -73,7 +73,6 @@ public final class MctsNode {
         return totalPoints;
     }
 
-
     /**
      * Retourne le nombre moyen de points.
      *

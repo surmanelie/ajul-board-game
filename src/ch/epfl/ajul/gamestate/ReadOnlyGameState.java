@@ -175,6 +175,7 @@ public interface ReadOnlyGameState {
      *
      * @param destination le tableau recevant les coups empaquetés
      * @return le nombre de coups écrits dans {@code destination}
+     * @throws IllegalArgumentException si {@code destination.length < Move.MAX_MOVES}
      */
     default int validMoves(short[] destination) {
         return validMovesInto(destination, false);
@@ -187,6 +188,7 @@ public interface ReadOnlyGameState {
      *
      * @param destination le tableau recevant les coups empaquetés
      * @return le nombre de coups écrits dans {@code destination}
+     * @throws IllegalArgumentException si {@code destination.length < Move.MAX_MOVES}
      */
     default int uniqueValidMoves(short[] destination) {
         return validMovesInto(destination, true);

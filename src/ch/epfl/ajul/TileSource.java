@@ -101,6 +101,7 @@ public sealed interface TileSource {
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum CenterArea implements TileSource {
+        /** Zone centrale. */
         CENTER_AREA;
 
         /**
@@ -121,14 +122,23 @@ public sealed interface TileSource {
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum Factory implements TileSource {
+        /** Première fabrique. */
         FACTORY_1,
+        /** Deuxième fabrique. */
         FACTORY_2,
+        /** Troisième fabrique. */
         FACTORY_3,
+        /** Quatrième fabrique. */
         FACTORY_4,
+        /** Cinquième fabrique. */
         FACTORY_5,
+        /** Sixième fabrique. */
         FACTORY_6,
+        /** Septième fabrique. */
         FACTORY_7,
+        /** Huitième fabrique. */
         FACTORY_8,
+        /** Neuvième fabrique. */
         FACTORY_9;
 
         /**

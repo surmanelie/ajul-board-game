@@ -63,7 +63,7 @@ public final class MyReadOnlyGameStateTest {
                 g,
                 PkTileSet.FULL_COLORED,
                 ImmutableIntArray.copyOf(all),
-                0,
+                PkIntSet32.add(PkIntSet32.EMPTY, 1),
                 PkPlayerStates.initial(g),
                 PlayerId.P1
         );
@@ -214,7 +214,7 @@ public final class MyReadOnlyGameStateTest {
         var g = game2();
         int[] src = new int[g.tileSourcesCount()];
         src[0] = PkTileSet.union(PkTileSet.of(1, TileKind.FIRST_PLAYER_MARKER), PkTileSet.of(1, TileKind.Colored.A));
-        var state = new S(g, PkTileSet.FULL_COLORED, ImmutableIntArray.copyOf(src), 0, PkPlayerStates.initial(g), PlayerId.P1);
+        var state = new S(g, PkTileSet.FULL_COLORED, ImmutableIntArray.copyOf(src), PkIntSet32.add(PkIntSet32.EMPTY, 0), PkPlayerStates.initial(g), PlayerId.P1);
 
         assertFalse(state.isRoundOver());
     }

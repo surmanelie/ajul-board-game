@@ -78,10 +78,15 @@ public sealed interface TileKind {
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum Colored implements TileKind {
+        /** Tuile de couleur A. */
         A,
+        /** Tuile de couleur B. */
         B,
+        /** Tuile de couleur C. */
         C,
+        /** Tuile de couleur D. */
         D,
+        /** Tuile de couleur E. */
         E;
 
         /**
@@ -140,6 +145,7 @@ public sealed interface TileKind {
      * @author Elie Menashe Reuben Surman (410685)
      */
     enum FirstPlayerMarker implements TileKind {
+        /** Marqueur du premier joueur. */
         FIRST_PLAYER_MARKER;
 
         /**

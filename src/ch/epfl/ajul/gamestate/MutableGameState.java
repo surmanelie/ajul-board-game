@@ -192,8 +192,8 @@ public final class MutableGameState implements ReadOnlyGameState {
                 pkTileBag = PkTileSet.EMPTY;
             }
 
+            pkTileBag = cachedDiscardedTiles;
             if (offset < extractedTileCount) {
-                pkTileBag = cachedDiscardedTiles;
                 int remainingTileCount = extractedTileCount - offset;
                 int refilledBagTileCount = PkTileSet.size(pkTileBag);
 
