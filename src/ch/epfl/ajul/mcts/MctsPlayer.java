@@ -2,6 +2,7 @@ package ch.epfl.ajul.mcts;
 
 import ch.epfl.ajul.Player;
 import ch.epfl.ajul.PlayerId;
+import ch.epfl.ajul.Preconditions;
 import ch.epfl.ajul.RankComputer;
 import ch.epfl.ajul.gamestate.Move;
 import ch.epfl.ajul.gamestate.MutableGameState;
@@ -31,9 +32,7 @@ public final class MctsPlayer implements Player {
      * @throws IllegalArgumentException si iterations est inférieur ou égal à zéro
      */
     public MctsPlayer(RandomGeneratorFactory<RandomGenerator> rngFactory, int iterations) {
-        if (iterations <= 0) {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(iterations > 0);
         this.rngFactory = rngFactory;
         this.iterations = iterations;
     }

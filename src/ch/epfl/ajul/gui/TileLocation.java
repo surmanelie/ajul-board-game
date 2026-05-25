@@ -76,7 +76,7 @@ public sealed interface TileLocation permits
          */
         public OnFloor {
             if (index < 0 || index > 6) {
-                throw new IllegalArgumentException("Invalid floor index: " + index);
+                throw new IllegalArgumentException();
             }
         }
     }

@@ -133,7 +133,6 @@ public final class PkFloor {
         boolean markerAlreadyPresent = false;
         boolean markerMustBeAdded = false;
 
-        // 1) Conserver les tuiles déjà présentes dans l ordre actuel
         for (int i = 0; i < initialSize; i += 1) {
             TileKind tile = tileAt(pkFloor, i);
             tiles.add(tile);
@@ -142,7 +141,6 @@ public final class PkFloor {
             }
         }
 
-        // 2) Ajouter les nouvelles tuiles par ordre de sorte
         for (TileKind kind : TileKind.ALL) {
             int count = PkTileSet.countOf(pkTileSet, kind);
 
@@ -158,7 +156,6 @@ public final class PkFloor {
             }
         }
 
-        // 3) Tronquer à MAX_SIZE, sauf que le marqueur doit toujours être présent
         if (tiles.size() > MAX_SIZE) {
             tiles.subList(MAX_SIZE, tiles.size()).clear();
 
@@ -167,8 +164,6 @@ public final class PkFloor {
             }
         }
 
-        // 4) Empaqueter en conservant l'ordre logique :
-        //    tileAt(pkFloor, 0) doit être la première tuile de la liste
         int packedFloor = 0;
         for (int i = tiles.size() - 1; i >= 0; i -= 1) {
             packedFloor = (packedFloor << BITS_PER_TILE) | tiles.get(i).index();

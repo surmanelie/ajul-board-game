@@ -5,6 +5,7 @@ import ch.epfl.ajul.PlayerId;
 import ch.epfl.ajul.TileDestination;
 import ch.epfl.ajul.TileKind;
 import ch.epfl.ajul.TileSource;
+import ch.epfl.ajul.gamestate.packed.PkWall;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -70,7 +71,7 @@ public record Tiles(
             // Mur (25 cases)
             for (TileDestination.Pattern line : TileDestination.Pattern.ALL) {
                 for (int col = 0; col < 5; col++) {
-                    TileKind.Colored color = ch.epfl.ajul.gamestate.packed.PkWall.colorAt(line, col);
+                    TileKind.Colored color = PkWall.colorAt(line, col);
                     locBuilder.add(new TileLocation.OnWall(playerId, line, color));
                 }
             }
