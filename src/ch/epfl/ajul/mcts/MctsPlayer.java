@@ -32,7 +32,7 @@ public final class MctsPlayer implements Player {
      */
     public MctsPlayer(RandomGeneratorFactory<RandomGenerator> rngFactory, int iterations) {
         if (iterations <= 0) {
-            throw new IllegalArgumentException("iterations must be > 0");
+            throw new IllegalArgumentException();
         }
         this.rngFactory = rngFactory;
         this.iterations = iterations;
