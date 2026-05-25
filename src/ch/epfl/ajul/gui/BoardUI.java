@@ -2,6 +2,7 @@ package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
+import ch.epfl.ajul.Points;
 import ch.epfl.ajul.TileDestination;
 import ch.epfl.ajul.TileKind;
 import ch.epfl.ajul.TileSource;
@@ -84,13 +85,9 @@ public final class BoardUI {
         Map<BonusKey, Node> bonusNodes = new HashMap<>();
         Game game = gameStateP.getValue().game();
 
-        // Nœud Racine englobant tout le plateau
         HBox boardBox = new HBox();
         boardBox.setId("board");
 
-        // -------------------------
-        // 1. SOURCES DE TUILES
-        // -------------------------
         GridPane sourcesBox = new GridPane();
         sourcesBox.setId("tile-sources");
 
@@ -125,9 +122,6 @@ public final class BoardUI {
         sourcesBox.add(factoriesGrid, 0, 0, 2, 1);
         sourcesBox.add(centerGrid, 0, 1, 2, 1);
 
-        // -------------------------
-        // 2. PLATEAUX DES JOUEURS
-        // -------------------------
         VBox playerBoardsBox = new VBox();
         playerBoardsBox.setId("player-boards");
 
@@ -223,12 +217,11 @@ public final class BoardUI {
             HBox floorHBox = new HBox();
             floorHBox.getStyleClass().addAll("tile-destination", "tile-group");
             
-            int[] floorPenalties = {-1, -1, -2, -2, -2, -3, -3};
             for (int i = 0; i < 7; i++) {
                 VBox columnBox = new VBox();
                 Node anchor = anchors.get(new TileLocation.OnFloor(pId, i));
 
-                Text penaltyText = new Text(String.valueOf(floorPenalties[i]));
+                Text penaltyText = new Text(String.valueOf(-Points.floorPenalty(i)));
                 StackPane penPane = new StackPane(penaltyText);
                 
                 columnBox.getChildren().addAll(anchor, penPane);

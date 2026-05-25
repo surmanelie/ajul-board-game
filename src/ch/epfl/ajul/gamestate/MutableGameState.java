@@ -177,8 +177,8 @@ public final class MutableGameState implements ReadOnlyGameState {
             );
             removeTilesFromBag(extractedTiles, 0, extractedTiles.length);
         } else {
-            int cachedDiscardedTiles = pkDiscardedTiles();
-            int discardedTileCount = PkTileSet.size(cachedDiscardedTiles);
+            int pkDiscarded = pkDiscardedTiles();
+            int discardedTileCount = PkTileSet.size(pkDiscarded);
             int extractedTileCount = Math.min(
                     tilesNeeded,
                     bagTileCount + discardedTileCount
@@ -192,7 +192,8 @@ public final class MutableGameState implements ReadOnlyGameState {
                 pkTileBag = PkTileSet.EMPTY;
             }
 
-            pkTileBag = cachedDiscardedTiles;
+            // Recharge le sac avec les tuiles sorties du jeu avant de compléter le tirage.
+            pkTileBag = pkDiscarded;
             if (offset < extractedTileCount) {
                 int remainingTileCount = extractedTileCount - offset;
                 int refilledBagTileCount = PkTileSet.size(pkTileBag);
