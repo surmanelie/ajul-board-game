@@ -54,23 +54,23 @@ public final class TileOverlayUI {
      * @param points   le nombre de points à afficher
      */
     public void showTilePoints(TileLocation.OnWall location, int points) {
-        Text text = new Text(String.valueOf(points));
-        text.getStyleClass().add("tile-points");
-        text.setViewOrder(-2);
-
         Platform.runLater(() -> {
+            Text text = new Text(String.valueOf(points));
+            text.getStyleClass().add("tile-points");
+            text.setViewOrder(-2);
+
             root.getChildren().add(text);
             text.applyCss();
             Bounds bounds = text.getBoundsInLocal();
-            
+
             Node anchor = tiles.anchors().get(location);
             if (anchor != null) {
                 Point2D anchorPos = anchor.localToScene(Point2D.ZERO);
                 Point2D rootPos = root.sceneToLocal(anchorPos);
-                
+
                 double centerX = rootPos.getX() + Tiles.TILE_WIDTH / 2.0 - bounds.getWidth() / 2.0;
                 double centerY = rootPos.getY() + Tiles.TILE_HEIGHT / 2.0 - bounds.getHeight() / 2.0;
-                
+
                 text.relocate(centerX, centerY);
             }
         });
@@ -116,7 +116,7 @@ public final class TileOverlayUI {
                         }
 
                         potentialMoves.clear();
-                        if (!validMoves.isEmpty()) {
+                        synchronized (validMoves) {
                             for (Move m : validMoves) {
                                 if (m.source().equals(onSource.source()) && m.tileColor().equals(colored)) {
                                     potentialMoves.add(m);
@@ -206,6 +206,8 @@ public final class TileOverlayUI {
             return root.sceneToLocal(anchorPos);
         };
 
+        // Différé au prochain pulse FX pour garantir que le graphe de scène est
+        // entièrement construit avant de répondre aux changements d'état.
         Platform.runLater(() -> {
             gameStateO.subscribe(newState -> {
                 Animation anim = TileAnimator.animateTiles(layoutFunc, tiles.tiles(), newState);

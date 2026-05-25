@@ -30,11 +30,11 @@ public record Move(
 
     /**
      * Nombre maximal de coups distincts possibles.
+     * <p>
+     * Borne supérieure : toutes les sources × toutes les couleurs × toutes les destinations.
      */
     public static final int MAX_MOVES =
-            TileSource.Factory.COUNT
-                    * TileSource.Factory.TILES_PER_FACTORY
-                    * TileDestination.COUNT;
+            TileSource.COUNT * TileKind.Colored.COUNT * TileDestination.COUNT;
 
     /**
      * Construit un coup.
