@@ -88,17 +88,20 @@ public final class Main extends Application {
 
             @Override
             public void fullRow(PlayerId playerId, ch.epfl.ajul.TileDestination.Pattern line, int points) {
-                if (boardUIRef[0] != null) boardUIRef[0].showBonusPoints(playerId, line);
+                if (boardUIRef[0] != null)
+                    Platform.runLater(() -> boardUIRef[0].showBonusPoints(playerId, line));
             }
 
             @Override
             public void fullColumn(PlayerId playerId, int column, int points) {
-                if (boardUIRef[0] != null) boardUIRef[0].showBonusPoints(playerId, column);
+                if (boardUIRef[0] != null)
+                    Platform.runLater(() -> boardUIRef[0].showBonusPoints(playerId, column));
             }
 
             @Override
             public void fullColor(PlayerId playerId, ch.epfl.ajul.TileKind.Colored color, int points) {
-                if (boardUIRef[0] != null) boardUIRef[0].showBonusPoints(playerId, color);
+                if (boardUIRef[0] != null)
+                    Platform.runLater(() -> boardUIRef[0].showBonusPoints(playerId, color));
             }
         };
 
