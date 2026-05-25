@@ -194,8 +194,6 @@ public final class BoardUI {
                 for (int col = 0; col < 5; col++) {
                     TileKind.Colored wallColor = PkWall.colorAt(line, col);
                     Node wallNode = anchors.get(new TileLocation.OnWall(pId, line, wallColor));
-                    // L'énoncé précise ceci : 
-                    // "les cases de la ligne du mur [...] ont la classe de style wall-background"
                     if (!wallNode.getStyleClass().contains("wall-background")) {
                         wallNode.getStyleClass().add("wall-background");
                     }
@@ -216,7 +214,7 @@ public final class BoardUI {
                 colBonusText.setVisible(false);
                 colBonusText.getStyleClass().addAll("bonus", "column-bonus");
                 boardGrid.add(colBonusText, col + 2, 5);
-                bonusNodes.put(new BonusKey(pId, col), colBonusText); // L'entier col sert de clef
+                bonusNodes.put(new BonusKey(pId, col), colBonusText);
             }
 
             playerVBox.getChildren().add(boardGrid);
@@ -227,14 +225,10 @@ public final class BoardUI {
             
             int[] floorPenalties = {-1, -1, -2, -2, -2, -3, -3};
             for (int i = 0; i < 7; i++) {
-                // Pour que la disposition soit identique par colonne, nous enveloppons 
-                // chaque tuile du plancher et sa pénalité dans un conteneur VBox interne,
-                // que cette instance HBox destinataire gèrera.
                 VBox columnBox = new VBox();
                 Node anchor = anchors.get(new TileLocation.OnFloor(pId, i));
-                
+
                 Text penaltyText = new Text(String.valueOf(floorPenalties[i]));
-                // On centre potentiellement la text box
                 StackPane penPane = new StackPane(penaltyText);
                 
                 columnBox.getChildren().addAll(anchor, penPane);

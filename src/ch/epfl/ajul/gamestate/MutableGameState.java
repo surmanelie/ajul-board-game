@@ -507,12 +507,6 @@ public final class MutableGameState implements ReadOnlyGameState {
         return PlayerId.ALL.get(nextOrdinal);
     }
 
-    // Note: The incremental update updateUniqueTileSourcesAfterMove has been removed
-    // because it was fundamentally flawed when the center or a factory becomes identical
-    // to another existing factory, causing duplicate representatives.
-    // The full updateUniqueTileSources() is O(N^2) where N <= 9, which is negligible
-    // and guarantees 100% correctness.
-
     /**
      * Met à jour l'ensemble empaqueté des indices des sources uniques.
      */

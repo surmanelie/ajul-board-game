@@ -57,14 +57,11 @@ public final class RankComputer {
         int previousScore = -1;
 
         for (int i = 0; i < playerCount; i++) {
-            // Parcours de la fin vers le début (ordre décroissant)
             int packed = packedScores[playerCount - 1 - i];
             int score = packed >> 2;
             int playerIndex = packed & 0b11;
 
-            if (i > 0 && score == previousScore) {
-                // Ex-æquo, garde le même currentRank
-            } else {
+            if (i == 0 || score != previousScore) {
                 currentRank = i;
             }
 

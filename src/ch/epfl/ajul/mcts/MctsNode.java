@@ -13,6 +13,7 @@ public final class MctsNode {
 
     private int pkMoveAndGameCount;
     private int totalPoints;
+    /** Fils de ce nœud, ou {@code null} si le nœud n'a pas encore été développé. */
     MctsNode[] children;
 
     /**
