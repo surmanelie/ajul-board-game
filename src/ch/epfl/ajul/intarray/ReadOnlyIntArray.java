@@ -1,4 +1,4 @@
-package ch.epfl.ajul.intarray;
+﻿package ch.epfl.ajul.intarray;
 
 /**
  * Représente un tableau d'entiers en lecture seule.
@@ -8,7 +8,7 @@ package ch.epfl.ajul.intarray;
  * et de récupérer une copie des valeurs sous la forme d'un tableau Java.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public interface ReadOnlyIntArray {
 

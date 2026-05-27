@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gui;
+﻿package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * @param tiles   les tuiles, regroupées par sorte
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public record Tiles(
         Map<TileLocation, Node> anchors,

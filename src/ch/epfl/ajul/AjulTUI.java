@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 import ch.epfl.ajul.gamestate.ImmutableGameState;
 import ch.epfl.ajul.gamestate.Move;
@@ -22,7 +22,7 @@ import static ch.epfl.ajul.Game.PlayerDescription.PlayerKind.HUMAN;
  * Interface textuelle minimale permettant de jouer à Ajul.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class AjulTUI {
 

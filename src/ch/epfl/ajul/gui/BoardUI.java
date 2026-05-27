@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gui;
+﻿package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -29,7 +29,7 @@ import java.util.concurrent.BlockingQueue;
  * Gère la partie de l'interface graphique représentant le plateau de jeu.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class BoardUI {
 

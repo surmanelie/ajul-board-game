@@ -1,10 +1,10 @@
-package ch.epfl.ajul.mcts;
+﻿package ch.epfl.ajul.mcts;
 
 /**
  * Représente un nœud de l'arbre de jeu construit par l'algorithme MCTS.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class MctsNode {
 

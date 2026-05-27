@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gamestate;
+﻿package ch.epfl.ajul.gamestate;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  * et de la fin de partie.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class MutableGameState implements ReadOnlyGameState {
 

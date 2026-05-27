@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gui;
+﻿package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -28,7 +28,7 @@ import java.util.random.RandomGeneratorFactory;
  * Gère l'initialisation de la fenêtre, l'analyse des arguments, et le fil d'exécution de la partie.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class Main extends Application {
 

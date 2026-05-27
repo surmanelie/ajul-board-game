@@ -1,4 +1,4 @@
-package ch.epfl.ajul.mcts;
+﻿package ch.epfl.ajul.mcts;
 
 import ch.epfl.ajul.gamestate.ReadOnlyGameState;
 import ch.epfl.ajul.gamestate.packed.PkMove;
@@ -17,7 +17,7 @@ import java.util.random.RandomGenerator;
  * jouer de manière quasi-aléatoire lors des simulations.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class HeuristicMoveSelector {
 

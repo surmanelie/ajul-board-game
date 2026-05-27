@@ -1,11 +1,11 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 /**
  * Constantes et méthodes statiques permettant de calculer les points obtenus
  * par les joueurs lors d'une partie d'Ajul.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class Points {
 

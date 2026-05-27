@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 /**
  * Représente un observateur de points, c.-à-d. un objet qui est informé chaque fois
@@ -8,7 +8,7 @@ package ch.epfl.ajul;
  * est vide.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public interface PointsObserver {
 

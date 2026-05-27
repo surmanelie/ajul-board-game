@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -11,7 +11,7 @@ import java.util.random.RandomGenerator;
  * {@link #ALL}.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public sealed interface TileKind {
 
@@ -75,7 +75,7 @@ public sealed interface TileKind {
      * Tuiles colorées, de {@code A} à {@code E}.
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     enum Colored implements TileKind {
         /** Tuile de couleur A. */
@@ -142,7 +142,7 @@ public sealed interface TileKind {
      * Marqueur du premier joueur.
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     enum FirstPlayerMarker implements TileKind {
         /** Marqueur du premier joueur. */

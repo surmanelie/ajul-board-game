@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * Les destinations sont indexées de manière à être cohérentes avec la liste {@link #ALL}.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public sealed interface TileDestination permits TileDestination.Pattern, TileDestination.Floor {
 
@@ -72,7 +72,7 @@ public sealed interface TileDestination permits TileDestination.Pattern, TileDes
      * Destinations correspondant aux lignes de motif (pattern lines).
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     enum Pattern implements TileDestination {
         /** Première ligne de motif (capacité 1). */
@@ -117,7 +117,7 @@ public sealed interface TileDestination permits TileDestination.Pattern, TileDes
      * Destination correspondant au plancher (floor).
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     enum Floor implements TileDestination {
         /** Plancher (floor), destination de pénalité. */

@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gamestate.packed;
+﻿package ch.epfl.ajul.gamestate.packed;
 
 /**
  * Méthodes statiques permettant de manipuler un ensemble empaqueté
@@ -9,7 +9,7 @@ package ch.epfl.ajul.gamestate.packed;
  * à l'ensemble.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class PkIntSet32 {
 

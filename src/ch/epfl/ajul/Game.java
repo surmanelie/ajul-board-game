@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import static java.util.Objects.requireNonNull;
  * Configuration immuable d'une partie d'Ajul.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class Game {
 
@@ -20,7 +20,7 @@ public final class Game {
      * @param kind la sorte du joueur
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     public record PlayerDescription(PlayerId id, String name, PlayerKind kind) {
 
@@ -28,7 +28,7 @@ public final class Game {
          * Sorte de joueur.
          *
          * @author Danny Levy (394098)
-         * @author Elie Menashe Reuben Surman (410685)
+         * @author Elie Menasche Reuben Surman (410685)
          */
         public enum PlayerKind {
             /** Joueur humain. */

@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gui;
+﻿package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.PlayerId;
 import ch.epfl.ajul.TileDestination;
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * Gère l'animation du déplacement des tuiles.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class TileAnimator {
 

@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gamestate.packed;
+﻿package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -26,7 +26,7 @@ import ch.epfl.ajul.intarray.ReadOnlyIntArray;
  * un tableau primitif de type {@code int[]}.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class PkPlayerStates {
 

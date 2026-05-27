@@ -1,4 +1,4 @@
-package ch.epfl.ajul.intarray;
+﻿package ch.epfl.ajul.intarray;
 
 /**
  * Tableau d'entiers mutable.
@@ -8,7 +8,7 @@ package ch.epfl.ajul.intarray;
  * à travers l'instance créée.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class MutableIntArray extends AbstractIntArray {
 

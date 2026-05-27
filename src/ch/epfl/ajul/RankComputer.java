@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 import ch.epfl.ajul.gamestate.ReadOnlyGameState;
 import ch.epfl.ajul.gamestate.packed.PkPlayerStates;
@@ -12,7 +12,7 @@ import java.util.List;
  * Permet de calculer le rang des différents joueurs à la fin d'une partie d'Ajul.
  * 
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class RankComputer {
 
