@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gui;
+﻿package ch.epfl.ajul.gui;
 
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
@@ -10,7 +10,7 @@ import javafx.util.Duration;
  * sa position depuis sa position de départ jusqu'à une coordonnée d'arrivée.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class RelocationTransition extends Transition {
 

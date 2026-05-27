@@ -1,4 +1,4 @@
-package ch.epfl.ajul.intarray;
+﻿package ch.epfl.ajul.intarray;
 
 import java.util.Arrays;
 
@@ -12,7 +12,7 @@ import java.util.Arrays;
  * d'immutabilité aux sous-classes.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public abstract class AbstractIntArray implements ReadOnlyIntArray {
 

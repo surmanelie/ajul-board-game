@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gamestate.packed;
+﻿package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.TileDestination;
 import ch.epfl.ajul.TileKind;
@@ -12,7 +12,7 @@ import ch.epfl.ajul.TileKind;
  * le bit d'index {@code i} de l'entier représentant le mur vaut 1.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class PkWall {
 

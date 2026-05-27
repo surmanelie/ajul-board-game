@@ -1,4 +1,4 @@
-package ch.epfl.ajul.gamestate.packed;
+﻿package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.TileKind;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import java.util.random.RandomGenerator;
  * </ul>
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class PkTileSet {
 

@@ -1,4 +1,4 @@
-package ch.epfl.ajul.intarray;
+﻿package ch.epfl.ajul.intarray;
 
 /**
  * Tableau d'entiers immuable.
@@ -8,7 +8,7 @@ package ch.epfl.ajul.intarray;
  * de garantir l'immutabilité.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class ImmutableIntArray extends AbstractIntArray {
 

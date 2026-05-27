@@ -1,4 +1,4 @@
-package ch.epfl.ajul;
+﻿package ch.epfl.ajul;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * {@link #ALL}.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public sealed interface TileSource {
 
@@ -98,7 +98,7 @@ public sealed interface TileSource {
      * Source correspondant à la zone centrale.
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     enum CenterArea implements TileSource {
         /** Zone centrale. */
@@ -119,7 +119,7 @@ public sealed interface TileSource {
      * Sources correspondant aux fabriques.
      *
      * @author Danny Levy (394098)
-     * @author Elie Menashe Reuben Surman (410685)
+     * @author Elie Menasche Reuben Surman (410685)
      */
     enum Factory implements TileSource {
         /** Première fabrique. */

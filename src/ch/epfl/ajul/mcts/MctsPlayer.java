@@ -1,4 +1,4 @@
-package ch.epfl.ajul.mcts;
+﻿package ch.epfl.ajul.mcts;
 
 import ch.epfl.ajul.Player;
 import ch.epfl.ajul.PlayerId;
@@ -17,7 +17,7 @@ import java.util.random.RandomGeneratorFactory;
  * Joueur utilisant l'algorithme Monte Carlo Tree Search (MCTS) pour jouer à Ajul.
  *
  * @author Danny Levy (394098)
- * @author Elie Menashe Reuben Surman (410685)
+ * @author Elie Menasche Reuben Surman (410685)
  */
 public final class MctsPlayer implements Player {
 
