@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.intarray;
+package ch.epfl.ajul.intarray;
 
 /**
  * Représente un tableau d'entiers en lecture seule.

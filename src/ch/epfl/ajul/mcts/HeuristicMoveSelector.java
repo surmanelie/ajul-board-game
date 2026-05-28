@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.mcts;
+package ch.epfl.ajul.mcts;
 
 import ch.epfl.ajul.gamestate.ReadOnlyGameState;
 import ch.epfl.ajul.gamestate.packed.PkMove;

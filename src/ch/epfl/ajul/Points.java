@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul;
+package ch.epfl.ajul;
 
 /**
  * Constantes et méthodes statiques permettant de calculer les points obtenus

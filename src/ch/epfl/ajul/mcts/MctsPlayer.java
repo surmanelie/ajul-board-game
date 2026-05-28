@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.mcts;
+package ch.epfl.ajul.mcts;
 
 import ch.epfl.ajul.Player;
 import ch.epfl.ajul.PlayerId;

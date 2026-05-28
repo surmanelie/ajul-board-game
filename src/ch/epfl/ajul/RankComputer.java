@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul;
+package ch.epfl.ajul;
 
 import ch.epfl.ajul.gamestate.ReadOnlyGameState;
 import ch.epfl.ajul.gamestate.packed.PkPlayerStates;

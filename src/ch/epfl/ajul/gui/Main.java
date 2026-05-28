@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gui;
+package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -49,7 +49,7 @@ public final class Main extends Application {
         Parameters params = getParameters();
         List<String> unnamed = params.getUnnamed();
         if (unnamed.isEmpty()) {
-            unnamed = List.of("Aline", "_Robot");
+            unnamed = List.of("Humain", "_Robot");
         } else if (unnamed.size() < 2 || unnamed.size() > 4) {
             throw new Error("Nombre de joueurs invalide. Attendu : entre 2 et 4.");
         }

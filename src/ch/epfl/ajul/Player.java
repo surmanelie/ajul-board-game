@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul;
+package ch.epfl.ajul;
 
 import ch.epfl.ajul.gamestate.Move;
 import ch.epfl.ajul.gamestate.ReadOnlyGameState;
