@@ -100,11 +100,12 @@ public final class MctsNode {
      * est maximale.
      *
      * @return l'index du fils à explorer
+     * @throws NullPointerException si {@code children} est {@code null}
      */
     public int indexOfChildToExplore() {
         int nParent = gameCount();
 
-        // Optimisation : exploration séquentielle initiale
+        // Garantit que chaque enfant est visité au moins une fois avant d'appliquer UCB
         if (nParent <= children.length) {
             return nParent - 1;
         }

@@ -48,6 +48,8 @@ public final class TileAnimator {
      * @param tiles      table associant les nœuds représentant les tuiles à leur sorte
      * @param gameState  l'état actuel de la partie
      * @return l'animation déplaçant les tuiles mal placées vers leur emplacement attendu
+     * @throws IllegalStateException si le nombre de tuiles en jeu dépasse le total ou si
+     *                               l'appariement final est déséquilibré
      */
     public static Animation animateTiles(
             Function<TileLocation, Point2D> layoutFunc,
@@ -65,7 +67,7 @@ public final class TileAnimator {
             TileLocationPartition demand = new TileLocationPartition();
             int expectedOnBoard = 0;
 
-            // 1. Demande du Mur, Motif, et Plancher
+            // 1. Demande du mur, du motif et du plancher
             for (PlayerId pId : gameState.playerIds()) {
                 if (kind instanceof TileKind.Colored colored) {
                     // Mur
