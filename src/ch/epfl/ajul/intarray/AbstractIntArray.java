@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.intarray;
+package ch.epfl.ajul.intarray;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul;
+package ch.epfl.ajul;
 
 import java.util.List;
 

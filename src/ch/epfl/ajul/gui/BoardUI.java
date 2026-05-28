@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gui;
+package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;
@@ -122,7 +122,7 @@ public final class BoardUI {
         sourcesBox.add(factoriesGrid, 0, 0, 2, 1);
         sourcesBox.add(centerGrid, 0, 1, 2, 1);
 
-        VBox playerBoardsBox = new VBox();
+        HBox playerBoardsBox = new HBox();
         playerBoardsBox.setId("player-boards");
 
         for (PlayerId pId : game.playerIds()) {
@@ -149,7 +149,7 @@ public final class BoardUI {
             Text infoText = new Text();
             infoText.getStyleClass().add("player-info");
             Game.PlayerDescription pDesc = game.playerDescriptions().get(pId.ordinal());
-            infoText.textProperty().bind(Bindings.format("%s\n%s",
+            infoText.textProperty().bind(Bindings.format("%s\nPoints : %s",
                     pDesc.name(),
                     gameStateP.map(gs -> PkPlayerStates.points(gs.pkPlayerStates(), pId))
             ));

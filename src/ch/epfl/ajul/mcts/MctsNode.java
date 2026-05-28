@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.mcts;
+package ch.epfl.ajul.mcts;
 
 /**
  * Représente un nœud de l'arbre de jeu construit par l'algorithme MCTS.

@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gui;
+package ch.epfl.ajul.gui;
 
 import ch.epfl.ajul.TileKind;
 import ch.epfl.ajul.gamestate.ImmutableGameState;
@@ -206,8 +206,6 @@ public final class TileOverlayUI {
             return root.sceneToLocal(anchorPos);
         };
 
-        // Différé au prochain pulse FX pour garantir que le graphe de scène est
-        // entièrement construit avant de répondre aux changements d'état.
         Platform.runLater(() -> {
             gameStateO.subscribe(newState -> {
                 Animation anim = TileAnimator.animateTiles(layoutFunc, tiles.tiles(), newState);

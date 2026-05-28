@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gamestate;
+package ch.epfl.ajul.gamestate;
 
 import ch.epfl.ajul.Game;
 import ch.epfl.ajul.PlayerId;

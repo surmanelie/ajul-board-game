@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.intarray;
+package ch.epfl.ajul.intarray;
 
 /**
  * Tableau d'entiers mutable.

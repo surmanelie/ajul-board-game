@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul;
+package ch.epfl.ajul;
 
 /**
  * Représente un observateur de points, c.-à-d. un objet qui est informé chaque fois

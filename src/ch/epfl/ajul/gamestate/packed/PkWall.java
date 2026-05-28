@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gamestate.packed;
+package ch.epfl.ajul.gamestate.packed;
 
 import ch.epfl.ajul.TileDestination;
 import ch.epfl.ajul.TileKind;

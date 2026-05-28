@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gamestate.packed;
+package ch.epfl.ajul.gamestate.packed;
 
 /**
  * Méthodes statiques permettant de manipuler un ensemble empaqueté

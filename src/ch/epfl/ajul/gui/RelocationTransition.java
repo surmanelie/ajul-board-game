@@ -1,4 +1,4 @@
-﻿package ch.epfl.ajul.gui;
+package ch.epfl.ajul.gui;
 
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
