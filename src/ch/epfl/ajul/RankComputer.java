@@ -26,7 +26,8 @@ public final class RankComputer {
      * Calcule le rang des différents joueurs et les place dans le tableau donné.
      *
      * @param gameState l'état de la partie
-     * @param ranks le tableau qui recevra les rangs
+     * @param ranks     le tableau qui recevra les rangs
+     * @throws ArrayIndexOutOfBoundsException si {@code ranks} est trop petit pour le nombre de joueurs
      */
     public static void playersRank(ReadOnlyGameState gameState, int[] ranks) {
         List<PlayerId> playerIds = gameState.playerIds();

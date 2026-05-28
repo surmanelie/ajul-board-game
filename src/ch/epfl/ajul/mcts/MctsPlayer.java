@@ -59,7 +59,7 @@ public final class MctsPlayer implements Player {
             MctsNode currentNode = root;
             int pathLen = 0;
 
-            // 1. Descente dans l'arbre vers un nœud non évalué
+            // Descente jusqu'au premier nœud jamais simulé ou fin de partie
             while (true) {
                 if (currentNode.gameCount() == 0 || mutState.isGameOver()) {
                     break;
@@ -99,8 +99,7 @@ public final class MctsPlayer implements Player {
                 currentNode = nextNode;
             }
 
-            // 2. Simulation de la fin de la partie avec un générateur propre à cette itération
-            // La graine est le gameCount du nœud évalué : varie au fil du temps et est déterministe
+            // Simulation : graine = gameCount courant pour diversifier les parties tout en restant reproductible
             RandomGenerator simRng = rngFactory.create(currentNode.gameCount());
 
             while (!mutState.isGameOver()) {
@@ -119,7 +118,7 @@ public final class MctsPlayer implements Player {
             }
             mutState.endGame();
 
-            // 3. Calcul des points généralisés : Pj = complement_rank × 256 + points_effectifs
+            // Score généralisé : Pj = (maxRank - rang) × 256 + points_effectifs
             RankComputer.playersRank(mutState, ranks);
             int maxRank = playersCount - 1;
 
@@ -130,7 +129,7 @@ public final class MctsPlayer implements Player {
                 generalizedPoints[playerId.ordinal()] = (complementRank << 8) + points;
             }
 
-            // 4. Propagation : la racine incrémente son compteur sans points
+            // Propagation : la racine n'est associée à aucun joueur, elle reçoit 0 point
             root.registerEvaluation(0);
             MctsNode traverseNode = root;
             for (int k = 0; k < pathLen; k++) {

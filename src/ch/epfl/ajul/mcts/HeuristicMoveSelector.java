@@ -5,6 +5,7 @@ import ch.epfl.ajul.gamestate.packed.PkMove;
 import ch.epfl.ajul.gamestate.packed.PkPatterns;
 import ch.epfl.ajul.gamestate.packed.PkPlayerStates;
 import ch.epfl.ajul.gamestate.packed.PkTileSet;
+import ch.epfl.ajul.Preconditions;
 import ch.epfl.ajul.TileDestination;
 import ch.epfl.ajul.TileKind;
 import ch.epfl.ajul.TileSource;
@@ -37,6 +38,7 @@ public final class HeuristicMoveSelector {
      * @param pkMoves un tableau contenant les coups empaquetés parmi lesquels choisir
      * @param validMovesCount le nombre de coups valides présents au début du tableau
      * @return l'index du coup choisi dans le tableau
+     * @throws IllegalArgumentException si {@code validMovesCount} est inférieur ou égal à zéro
      */
     public static int selectMove(
             RandomGenerator rng,
@@ -44,6 +46,7 @@ public final class HeuristicMoveSelector {
             short[] pkMoves,
             int validMovesCount
     ) {
+        Preconditions.checkArgument(validMovesCount > 0);
         ReservoirSampler exactFill = new ReservoirSampler();
         ReservoirSampler partialFill = new ReservoirSampler();
         ReservoirSampler others = new ReservoirSampler();

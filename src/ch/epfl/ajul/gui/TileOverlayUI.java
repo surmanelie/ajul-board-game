@@ -48,12 +48,12 @@ public final class TileOverlayUI {
     }
 
     /**
-     * Affiche un nombre de points au-dessus d'un emplacement du mur.
+     * Affiche un nombre de points au-dessus de l'emplacement donné.
      *
-     * @param location l'emplacement sur le mur
-     * @param points   le nombre de points à afficher
+     * @param location l'emplacement logique cible
+     * @param points   le nombre de points à afficher (négatif pour une pénalité)
      */
-    public void showTilePoints(TileLocation.OnWall location, int points) {
+    public void showTilePoints(TileLocation location, int points) {
         Platform.runLater(() -> {
             Text text = new Text(String.valueOf(points));
             text.getStyleClass().add("tile-points");

@@ -43,6 +43,12 @@ public final class Main extends Application {
         launch(args);
     }
 
+    /**
+     * Initialise et affiche la fenêtre principale, puis lance la boucle de jeu.
+     *
+     * @param primaryStage la fenêtre principale JavaFX
+     * @throws Error si le nombre de joueurs est invalide ou si le thread de jeu est interrompu
+     */
     @Override
     public void start(Stage primaryStage) {
         // Analyse des arguments
@@ -84,6 +90,8 @@ public final class Main extends Application {
 
             @Override
             public void floor(PlayerId playerId, int penalty) {
+                if (tileOverlayUIRef[0] != null)
+                    tileOverlayUIRef[0].showTilePoints(new TileLocation.OnFloor(playerId, 0), penalty);
             }
 
             @Override
@@ -110,7 +118,7 @@ public final class Main extends Application {
                 observer
         );
 
-        // Générateur aléatoire
+        // Initialise le RNG à partir de la graine fournie ou d'une graine aléatoire sécurisée
         Map<String, String> namedParams = params.getNamed();
         byte[] seedBytes;
         if (namedParams.containsKey("seed")) {

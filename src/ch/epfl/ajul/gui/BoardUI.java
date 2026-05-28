@@ -145,7 +145,7 @@ public final class BoardUI {
 
             VBox playerVBox = new VBox();
 
-            // Nom et score (dynamiques)
+            // Nom et score mis à jour dynamiquement selon l'état de la partie
             Text infoText = new Text();
             infoText.getStyleClass().add("player-info");
             Game.PlayerDescription pDesc = game.playerDescriptions().get(pId.ordinal());
