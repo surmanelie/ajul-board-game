@@ -30,6 +30,11 @@ import java.util.random.RandomGeneratorFactory;
  */
 public final class Main extends Application {
 
+    /**
+     * Construit l'application JavaFX (requis par le framework JavaFX).
+     */
+    public Main() {}
+
     private static final int MCTS_ITERATIONS = 100_000;
 
     /**
@@ -65,10 +70,12 @@ public final class Main extends Application {
             String arg = unnamed.get(i);
             PlayerId id = PlayerId.ALL.get(i);
             if (arg.startsWith("_")) {
-                playerDescriptions.add(new Game.PlayerDescription(id, arg.substring(1), Game.PlayerDescription.PlayerKind.AI));
+                playerDescriptions.add(new Game.PlayerDescription(
+                        id, arg.substring(1), Game.PlayerDescription.PlayerKind.AI));
                 isMctsPlayer.put(id, true);
             } else {
-                playerDescriptions.add(new Game.PlayerDescription(id, arg, Game.PlayerDescription.PlayerKind.HUMAN));
+                playerDescriptions.add(new Game.PlayerDescription(
+                        id, arg, Game.PlayerDescription.PlayerKind.HUMAN));
                 isMctsPlayer.put(id, false);
             }
         }
@@ -80,7 +87,9 @@ public final class Main extends Application {
 
         PointsObserver observer = new PointsObserver() {
             @Override
-            public void newWallTile(PlayerId playerId, ch.epfl.ajul.TileDestination.Pattern line, ch.epfl.ajul.TileKind.Colored color, int points) {
+            public void newWallTile(PlayerId playerId,
+                    ch.epfl.ajul.TileDestination.Pattern line,
+                    ch.epfl.ajul.TileKind.Colored color, int points) {
                 if (tileOverlayUIRef[0] != null) {
                     tileOverlayUIRef[0].showTilePoints(new TileLocation.OnWall(playerId, line, color), points);
                 }

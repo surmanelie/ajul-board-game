@@ -1,3 +1,6 @@
+/**
+ * Module principal du jeu Ajul.
+ */
 module Ajul {
   requires javafx.graphics;
   requires javafx.controls;

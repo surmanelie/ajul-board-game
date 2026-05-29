@@ -133,7 +133,8 @@ public final class TileOverlayUI {
 
                         List<Node> dragNodes = new ArrayList<>();
                         for (Node n : tiles.tiles().getOrDefault(colored, List.of())) {
-                            if (n.getUserData() instanceof TileLocation.OnSource s && s.source().equals(onSource.source())) {
+                            if (n.getUserData() instanceof TileLocation.OnSource s
+                                    && s.source().equals(onSource.source())) {
                                 dragNodes.add(n);
                             }
                         }
@@ -165,7 +166,9 @@ public final class TileOverlayUI {
                                 if (accepted) {
                                     for (Node n : dragNodes) {
                                         n.setViewOrder(0);
-                                        n.relocate(n.getLayoutX() + n.getTranslateX(), n.getLayoutY() + n.getTranslateY());
+                                        n.relocate(
+                                                n.getLayoutX() + n.getTranslateX(),
+                                                n.getLayoutY() + n.getTranslateY());
                                         n.setTranslateX(0);
                                         n.setTranslateY(0);
                                     }

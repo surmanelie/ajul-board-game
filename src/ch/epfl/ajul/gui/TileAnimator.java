@@ -125,7 +125,10 @@ public final class TileAnimator {
             int totalTiles = kindNodes.size();
             int remaining = totalTiles - expectedOnBoard;
             if (remaining < 0) {
-                throw new IllegalStateException("Le nombre de tuiles attendues (" + expectedOnBoard + ") dépasse le nombre total de tuiles (" + totalTiles + ") de la sorte " + kind);
+                throw new IllegalStateException(
+                        "Le nombre de tuiles attendues (" + expectedOnBoard
+                        + ") dépasse le nombre total de tuiles (" + totalTiles
+                        + ") de la sorte " + kind);
             }
             for (int i = 0; i < remaining; i++) {
                 demand.offBoard().add(new TileLocation.OffBoard(kind, i));
@@ -158,13 +161,20 @@ public final class TileAnimator {
             }
 
             // 5. Tris requis pour l'appariement
-            demand.wall().sort(Comparator.comparing(TileLocation.OnWall::playerId).thenComparing(TileLocation.OnWall::line).thenComparing(TileLocation.OnWall::color));
+            demand.wall().sort(Comparator.comparing(TileLocation.OnWall::playerId)
+                    .thenComparing(TileLocation.OnWall::line)
+                    .thenComparing(TileLocation.OnWall::color));
             demand.pattern().sort(Comparator.comparing(TileLocation.OnPattern::index));
             demand.floor().sort(Comparator.comparing(TileLocation.OnFloor::index));
-            demand.source().sort(Comparator.<TileLocation.OnSource, Integer>comparing(s -> s.source().index()).thenComparing(TileLocation.OnSource::index));
+            demand.source().sort(Comparator
+                    .<TileLocation.OnSource, Integer>comparing(s -> s.source().index())
+                    .thenComparing(TileLocation.OnSource::index));
             demand.offBoard().sort(Comparator.comparing(TileLocation.OffBoard::index));
 
-            supply.source().sort(Comparator.<TileLocation.OnSource, Integer>comparing(s -> s.source().index()).reversed().thenComparing(TileLocation.OnSource::index));
+            supply.source().sort(Comparator
+                    .<TileLocation.OnSource, Integer>comparing(s -> s.source().index())
+                    .reversed()
+                    .thenComparing(TileLocation.OnSource::index));
 
             // 6. Appariement
             // 6.1 Demande mur -> Offre motif (plus à droite)
@@ -253,7 +263,10 @@ public final class TileAnimator {
             remainingDemand.addAll(demand.offBoard());
 
             if (remainingSupply.size() != remainingDemand.size()) {
-                throw new IllegalStateException("Déséquilibre lors du dernier appariement : " + remainingSupply.size() + " offre(s) pour " + remainingDemand.size() + " demande(s).");
+                throw new IllegalStateException(
+                        "Déséquilibre lors du dernier appariement : "
+                        + remainingSupply.size() + " offre(s) pour "
+                        + remainingDemand.size() + " demande(s).");
             }
 
             for (int i = 0; i < remainingSupply.size(); i++) {
