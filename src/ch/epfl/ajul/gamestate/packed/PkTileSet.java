@@ -99,12 +99,11 @@ public final class PkTileSet {
     }
 
     /**
-     * Retourne le nombre total de tuiles colorées dans l'ensemble empaqueté.
-     * <p>
-     * Le marqueur de premier joueur n'est pas comptabilisé.
+     * Retourne le nombre total de tuiles dans l'ensemble empaqueté,
+     * marqueur de premier joueur inclus s'il est présent.
      *
      * @param pkTileSet l'ensemble empaqueté
-     * @return le nombre de tuiles colorées dans l'ensemble
+     * @return le nombre total de tuiles dans l'ensemble
      */
     public static int size(int pkTileSet) {
         int partialSums = pkTileSet + (pkTileSet >>> BITS_PER_COLOR);

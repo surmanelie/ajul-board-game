@@ -29,12 +29,15 @@ public record Move(
 ) {
 
     /**
-     * Nombre maximal de coups distincts possibles.
+     * Nombre maximal de coups distincts possibles en un seul tour.
      * <p>
-     * Borne supérieure : toutes les sources × toutes les couleurs × toutes les destinations.
+     * Borne supérieure : au début d'une manche, il y a au plus
+     * {@code Factory.COUNT × Factory.TILES_PER_FACTORY} groupes (source, couleur)
+     * distincts, chacun pouvant être placé sur l'une des {@code TileDestination.COUNT}
+     * destinations.
      */
     public static final int MAX_MOVES =
-            TileSource.COUNT * TileKind.Colored.COUNT * TileDestination.COUNT;
+            TileSource.Factory.COUNT * TileSource.Factory.TILES_PER_FACTORY * TileDestination.COUNT;
 
     /**
      * Construit un coup.
