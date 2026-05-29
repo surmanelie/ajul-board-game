@@ -1,7 +1,17 @@
 # IntelliJ IDEA
 /out/
+/out-cli/
 /.idea/
 Ajul.iml
 
 # Submit.java
 /submissions/
+
+# Generated file lists and logs
+sources_prod.txt
+sources_test.txt
+src_list.txt
+test_list.txt
+test_nogui_list.txt
+output.txt
+error.log

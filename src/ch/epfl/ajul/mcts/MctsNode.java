@@ -34,7 +34,7 @@ public final class MctsNode {
      * @return le nœud racine
      */
     public static MctsNode newRoot() {
-        // Le compteur est initialisé à 1 pour éviter une division par zéro lors de l'exploration.
+        // Le compteur est initialisé à 1 pour garantir la distinction séquentiel/UCB dans indexOfChildToExplore.
         return new MctsNode((1 << 10) | NO_MOVE, 0);
     }
 

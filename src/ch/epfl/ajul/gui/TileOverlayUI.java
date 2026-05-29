@@ -55,7 +55,7 @@ public final class TileOverlayUI {
      */
     public void showTilePoints(TileLocation location, int points) {
         Platform.runLater(() -> {
-            Text text = new Text(String.valueOf(points));
+            Text text = new Text(points > 0 ? "+" + points : String.valueOf(points));
             text.getStyleClass().add("tile-points");
             text.setViewOrder(-2);
 

@@ -13,8 +13,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import ch.epfl.ajul.gui.TileLocation;
-
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
@@ -90,8 +88,6 @@ public final class Main extends Application {
 
             @Override
             public void floor(PlayerId playerId, int penalty) {
-                if (tileOverlayUIRef[0] != null)
-                    tileOverlayUIRef[0].showTilePoints(new TileLocation.OnFloor(playerId, 0), penalty);
             }
 
             @Override
