@@ -70,10 +70,8 @@ public final class HeuristicMoveSelector {
                 int missingTiles = patternLine.capacity() - currentTiles;
 
                 if (tilesAvailable >= missingTiles) {
-                    // La ligne sera totalement remplie (tuiles exactes ou overflow)
                     exactFill.add(i, rng);
                 } else {
-                    // tilesAvailable < missingTiles : remplissage partiel
                     partialFill.add(i, rng);
                 }
             } else {

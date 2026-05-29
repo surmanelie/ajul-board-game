@@ -276,7 +276,7 @@ public final class TileAnimator {
         }
         node.setUserData(demandLoc);
         Point2D endPos = layoutFunc.apply(demandLoc);
-        RelocationTransition rt = new RelocationTransition(node, endPos, Duration.millis(500));
+        RelocationTransition rt = new RelocationTransition(node, endPos, Duration.millis(1000));
         pt.getChildren().add(rt);
     }
 }

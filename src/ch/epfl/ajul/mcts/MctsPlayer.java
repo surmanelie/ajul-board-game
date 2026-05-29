@@ -99,8 +99,8 @@ public final class MctsPlayer implements Player {
                 currentNode = nextNode;
             }
 
-            // Simulation : graine = gameCount courant pour diversifier les parties tout en restant reproductible
-            RandomGenerator simRng = rngFactory.create(currentNode.gameCount());
+            // Simulation : graine = totalPoints du nœud évalué, comme décrit dans la consigne
+            RandomGenerator simRng = rngFactory.create(currentNode.totalPoints());
 
             while (!mutState.isGameOver()) {
                 if (mutState.isRoundOver()) {
