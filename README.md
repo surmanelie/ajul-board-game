@@ -6,10 +6,6 @@ Les joueurs piochent des tuiles colorées, les placent sur des lignes de prépar
 
 Projet réalisé dans le cadre du cours de pratique de la programmation orientée objet (POO) à l'EPFL, en binôme.
 
-**Auteurs**
-- Danny Levy
-- Elie Menasche Reuben Surman
-
 ## Notions de POO et concepts mis en œuvre
 
 - **Immutabilité et séparation des responsabilités** : l'état de la partie existe sous plusieurs formes selon le besoin — une version immuable (`ImmutableGameState`), une version modifiable (`MutableGameState`) et une version en lecture seule exposée à l'IA (`ReadOnlyGameState`), pour garantir qu'aucune partie du code ne modifie l'état par erreur.
